@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import { MoviesShowsContext } from '../../Context';
 import { CONTENT_TYPE, SHOW_PLACEHOLDER, MOVIE_PLACEHOLDER } from '../../constants';
-import { NavbarState } from '../../types';
+import { NavbarState, AppContextInterface } from '../../types';
 import './Navbar.css';
 
-export default class Navbar extends Component {
+export default class Navbar extends Component<{}, NavbarState> {
   static contextType = MoviesShowsContext;
 
   state: NavbarState = {
-    moviesActive: this.context.contentType === CONTENT_TYPE.MOVIE,
-    showsActive: this.context.contentType === CONTENT_TYPE.TV_SHOW,
+    moviesActive: (this.context as AppContextInterface).contentType === CONTENT_TYPE.MOVIE,
+    showsActive: (this.context as AppContextInterface).contentType === CONTENT_TYPE.TV_SHOW,
   };
 
   render() {
-    const { search, contentType, setSearch, setContentType } = this.context;
+    const context = this.context as AppContextInterface;
+    const { search, contentType, setSearch, setContentType } = context;
     const searchContent = contentType === CONTENT_TYPE.TV_SHOW ? SHOW_PLACEHOLDER : MOVIE_PLACEHOLDER;
 
     // Handle content for tv shows or movies and change button style to active

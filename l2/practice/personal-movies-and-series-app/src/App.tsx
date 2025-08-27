@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { MoviesShowsProvider } from './Context';
 import Home from './pages/Home/Home';
 import MovieOrShow from './pages/MovieOrShow/MovieOrShow';
@@ -11,11 +11,11 @@ function App() {
     <>
       <MoviesShowsProvider>
         <Router>
-          <Switch>
-            <Route exact path='/' component={Home} />
-            <Route exact path='/:content/:id' component={MovieOrShow} />
-            <Route component={Error} />
-          </Switch>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/:content/:id' element={<MovieOrShow />} />
+            <Route path='*' element={<Error />} />
+          </Routes>
         </Router>
       </MoviesShowsProvider>
     </>

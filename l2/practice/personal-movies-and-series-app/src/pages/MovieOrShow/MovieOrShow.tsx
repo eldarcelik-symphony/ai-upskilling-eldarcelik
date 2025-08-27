@@ -1,14 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { MoviesShowsContext } from '../../Context';
 import { API_KEY, IMAGE_PATH, DEFAULT_IMAGE } from '../../constants';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Loading from '../../components/Loading/Loading';
 import Vote from '../../components/Vote/Vote';
 import './MovieOrShow.css';
 
 export default function MovieOrShow(props: any) {
   const { contentType } = useContext(MoviesShowsContext);
-  const [id] = useState(props.match.params.id);
+  const { id } = useParams();
   const [video, setVideo] = useState<string | number>();
   const [item, setItem] = useState<any>();
   const ITEM_URL = `https://api.themoviedb.org/3/${contentType}/${id}?api_key=${API_KEY}&append_to_response=videos`;

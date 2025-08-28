@@ -1,6 +1,5 @@
 import React, { useState, useEffect, createContext } from 'react';
 import {
-  API_KEY,
   NUMBER_OF_ITEMS,
   CONTENT_TYPE,
   DEFAULT_SEARCH_VALUE,
@@ -9,6 +8,7 @@ import {
   QUERY_TYPE,
 } from './constants';
 import { AppContextInterface, IShow, IMovie } from './types';
+import { axios } from './axios';
 
 type ContextProps = {
   children: React.ReactNode;
@@ -26,14 +26,15 @@ function MoviesShowsProvider({ children }: ContextProps) {
   const [search, setSearch] = useState<string>(DEFAULT_SEARCH_VALUE);
 
   const QUERY_TYPE_INFO = {
-    [QUERY_TYPE.TOP_RATED]: `https://api.themoviedb.org/3/${contentType}/top_rated?api_key=${API_KEY}&language=en-US`,
-    [QUERY_TYPE.SEARCH]: `https://api.themoviedb.org/3/search/${contentType}?api_key=${API_KEY}&language=en-US&query=${search}`,
+    [QUERY_TYPE.TOP_RATED]: `/${contentType}/top_rated`,
+    [QUERY_TYPE.SEARCH]: `/search/${contentType}?query=${search}`,
   };
 
   const getItems = (quryType: string) =>
-    fetch(QUERY_TYPE_INFO[quryType])
-      .then((res) => res.json())
-      .then(({ results }) => {
+    axios
+      .get(QUERY_TYPE_INFO[quryType])
+      .then((res) => {
+        const { results } = res.data;
         const items = quryType === QUERY_TYPE.TOP_RATED ? results.slice(0, NUMBER_OF_ITEMS) : results;
 
         if (contentType === CONTENT_TYPE.TV_SHOW) {
@@ -44,6 +45,7 @@ function MoviesShowsProvider({ children }: ContextProps) {
       })
       .catch((error) => {
         // TODO: Handle errors
+        console.error('Error fetching items:', error);
       })
       .finally(() => {
         setLoading(false);

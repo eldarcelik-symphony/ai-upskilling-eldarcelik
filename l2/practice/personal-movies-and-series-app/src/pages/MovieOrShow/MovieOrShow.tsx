@@ -1,10 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { MoviesShowsContext } from '../../Context';
-import { API_KEY, IMAGE_PATH, DEFAULT_IMAGE } from '../../constants';
+import { IMAGE_PATH, DEFAULT_IMAGE } from '../../constants';
 import { Link, useParams } from 'react-router-dom';
 import Loading from '../../components/Loading/Loading';
 import Vote from '../../components/Vote/Vote';
 import { IMovie, IShow } from '../../types';
+import { axios } from '../../axios';
 import './MovieOrShow.css';
 
 export default function MovieOrShow() {
@@ -12,18 +13,22 @@ export default function MovieOrShow() {
   const { id } = useParams();
   const [video, setVideo] = useState<string | number>();
   const [item, setItem] = useState<IMovie | IShow>();
-  const ITEM_URL = `https://api.themoviedb.org/3/${contentType}/${id}?api_key=${API_KEY}&append_to_response=videos`;
+  const ITEM_URL = `/${contentType}/${id}?append_to_response=videos`;
 
   useEffect(() => {
-    fetch(ITEM_URL)
-      .then((res) => res.json())
-      .then((data) => {
+    axios
+      .get(ITEM_URL)
+      .then((res) => {
+        const data = res.data;
         setItem(data);
         // Set video key to use in React Player url
-        setVideo(data.videos.results[0].key);
+        if (data.videos && data.videos.results && data.videos.results.length > 0) {
+          setVideo(data.videos.results[0].key);
+        }
       })
       .catch((error) => {
         // TODO: Handle error
+        console.error('Error fetching item:', error);
       });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

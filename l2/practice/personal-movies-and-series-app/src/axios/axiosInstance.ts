@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_KEY } from '../constants';
+import { convertApiResponse } from '../utils/convertApiResponse';
 
 // Create axios instance with base configuration
 const axiosInstance = axios.create({
@@ -34,6 +35,10 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => {
+    // Automatically convert all API responses from snake_case to camelCase
+    if (response.data) {
+      response.data = convertApiResponse(response.data);
+    }
     return response;
   },
   (error) => {

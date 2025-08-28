@@ -1,14 +1,14 @@
 export interface IData {
   id: number;
   overview: string;
-  vote_average: number;
-  poster_path: string | null;
+  voteAverage: number;
+  posterPath: string | null;
 }
 
 export interface IShow extends IData {
   name: string;
-  first_air_date: string;
-  last_air_date: string;
+  firstAirDate: string;
+  lastAirDate: string;
 }
 
 interface IVideos {
@@ -18,7 +18,7 @@ interface IVideos {
 export interface IMovie extends IData {
   title: string;
   videos: IVideos;
-  release_date: string;
+  releaseDate: string;
 }
 
 export type AppContextInterface = {

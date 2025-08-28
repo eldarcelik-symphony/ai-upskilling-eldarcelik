@@ -38,9 +38,9 @@ function MoviesShowsProvider({ children }: ContextProps) {
         const items = quryType === QUERY_TYPE.TOP_RATED ? results.slice(0, NUMBER_OF_ITEMS) : results;
 
         if (contentType === CONTENT_TYPE.TV_SHOW) {
-          setShows(items);
+          setShows(items as IShow[]);
         } else {
-          setMovies(items);
+          setMovies(items as IMovie[]);
         }
       })
       .catch((error) => {

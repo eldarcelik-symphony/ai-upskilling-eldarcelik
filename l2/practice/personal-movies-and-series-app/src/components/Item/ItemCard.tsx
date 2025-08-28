@@ -12,20 +12,20 @@ type ItemCardProps = {
 
 export default function ItemCard({ item }: ItemCardProps) {
   const { contentType } = useContext(MoviesShowsContext);
-  const { id, poster_path, vote_average } = item;
+  const { id, posterPath, voteAverage } = item;
 
   return (
     <Link to={`/${contentType}/${item.id}`} className='no-decoration'>
       <div key={id} className='item item-container'>
         <img
           className='image'
-          src={poster_path ? `${IMAGE_PATH}${poster_path}` : DEFAULT_IMAGE}
+          src={posterPath ? `${IMAGE_PATH}${posterPath}` : DEFAULT_IMAGE}
           alt={'title' in item ? item.title : item.name}
         />
 
         <div className='title-container'>
           <h1 className='title'>{'title' in item ? item.title : item.name}</h1>
-          {vote_average > 0 && <Vote voteValue={Math.round(vote_average * 10) / 10} />}
+          {voteAverage > 0 && <Vote voteValue={Math.round(voteAverage * 10) / 10} />}
         </div>
       </div>
     </Link>

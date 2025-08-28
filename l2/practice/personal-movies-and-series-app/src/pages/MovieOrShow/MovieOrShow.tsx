@@ -51,7 +51,7 @@ export default function MovieOrShow() {
     ) : (
       <img
         className='center-media picture'
-        src={item.poster_path ? `${IMAGE_PATH}${item.poster_path}` : DEFAULT_IMAGE}
+        src={item.posterPath ? `${IMAGE_PATH}${item.posterPath}` : DEFAULT_IMAGE}
         alt={'title' in item ? item.title : item.name}
         width='400px'
         height='100%'
@@ -63,13 +63,13 @@ export default function MovieOrShow() {
     <div>
       <h1 className='item-title'>
         {'title' in item ? item.title : item.name}
-        {item.vote_average > 0 && <Vote voteValue={Math.round(item.vote_average * 10) / 10} />}
+        {item.voteAverage > 0 && <Vote voteValue={Math.round(item.voteAverage * 10) / 10} />}
       </h1>
       <hr />
       <p className='release'>
-        {'release_date' in item
-          ? `Release Date: ${item.release_date}`
-          : `First Air Date: ${item.first_air_date} \nLast Air Date: ${item.last_air_date}`}
+        {'releaseDate' in item
+          ? `Release Date: ${item.releaseDate}`
+          : `First Air Date: ${item.firstAirDate} \nLast Air Date: ${item.lastAirDate}`}
       </p>
       <p className='overview'>{item.overview.length > 0 ? item.overview : 'No additional information available.'}</p>
     </div>

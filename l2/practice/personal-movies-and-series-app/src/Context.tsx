@@ -8,7 +8,11 @@ import {
   MIN_SEARCH_CHARACTERS,
   QUERY_TYPE,
 } from './constants';
-import { ContextProps, AppContextInterface, IShow, IMovie } from './types';
+import { AppContextInterface, IShow, IMovie } from './types';
+
+type ContextProps = {
+  children: React.ReactNode;
+};
 
 const MoviesShowsContext = createContext({} as AppContextInterface);
 let timer: ReturnType<typeof setTimeout> | null = null;

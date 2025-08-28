@@ -4,13 +4,14 @@ import { API_KEY, IMAGE_PATH, DEFAULT_IMAGE } from '../../constants';
 import { Link, useParams } from 'react-router-dom';
 import Loading from '../../components/Loading/Loading';
 import Vote from '../../components/Vote/Vote';
+import { IMovie, IShow } from '../../types';
 import './MovieOrShow.css';
 
-export default function MovieOrShow(props: any) {
+export default function MovieOrShow() {
   const { contentType } = useContext(MoviesShowsContext);
   const { id } = useParams();
   const [video, setVideo] = useState<string | number>();
-  const [item, setItem] = useState<any>();
+  const [item, setItem] = useState<IMovie | IShow>();
   const ITEM_URL = `https://api.themoviedb.org/3/${contentType}/${id}?api_key=${API_KEY}&append_to_response=videos`;
 
   useEffect(() => {
@@ -33,36 +34,35 @@ export default function MovieOrShow(props: any) {
 
   // If there is video, display it, otherwise display image
   const displayVideoOrImage =
-    item.videos.results.length === 0 ? (
-      <img
-        className='center-media picture'
-        src={item.poster_path ? `${IMAGE_PATH}${item.poster_path}` : DEFAULT_IMAGE}
-        alt={item.title || item.name}
-        width='400px'
-        height='100%'
-      />
-    ) : (
+    'videos' in item && item.videos.results.length > 0 ? (
       <iframe
         title='video'
         className='center-media video'
         width='100%'
         height='100%'
         src={`https://www.youtube.com/embed/${video}`}
-        frameBorder='0'
         allowFullScreen
       ></iframe>
+    ) : (
+      <img
+        className='center-media picture'
+        src={item.poster_path ? `${IMAGE_PATH}${item.poster_path}` : DEFAULT_IMAGE}
+        alt={'title' in item ? item.title : item.name}
+        width='400px'
+        height='100%'
+      />
     );
 
   // Display item details
   const itemDetails = (
     <div>
       <h1 className='item-title'>
-        {item.name || item.title}
+        {'title' in item ? item.title : item.name}
         {item.vote_average > 0 && <Vote voteValue={Math.round(item.vote_average * 10) / 10} />}
       </h1>
       <hr />
       <p className='release'>
-        {item.release_date
+        {'release_date' in item
           ? `Release Date: ${item.release_date}`
           : `First Air Date: ${item.first_air_date} \nLast Air Date: ${item.last_air_date}`}
       </p>

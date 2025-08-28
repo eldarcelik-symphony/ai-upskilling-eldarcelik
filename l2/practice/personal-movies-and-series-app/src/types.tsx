@@ -1,7 +1,3 @@
-export type ContextProps = {
-  children: React.ReactNode;
-};
-
 export interface IData {
   id: number;
   overview: string;

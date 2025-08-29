@@ -4,6 +4,7 @@ import { IMAGE_PATH, DEFAULT_IMAGE } from '../constants';
 import { Link, useParams } from 'react-router-dom';
 import Loading from '../components/Loading';
 import Vote from '../components/Vote';
+import Reviews from '../components/Reviews';
 import { IMovie, IShow } from '../types';
 import { axios } from '../axios';
 
@@ -78,17 +79,14 @@ export default function MovieOrShow() {
 
   return (
     <div className='min-h-screen bg-primary pb-4'>
-      <div className='w-[90vw] mx-auto mb-4 flex flex-col bg-secondary'>
-        <div className='w-full bg-primary'>
-          <Link to='/'>
-            <button className='inline-flex items-center h-[35px] mx-[5px] px-6 py-2.5 text-base whitespace-nowrap text-center border-none rounded-lg outline-none cursor-pointer transition-all duration-200 bg-secondary text-primary hover:bg-gray-200 my-4 -ml-8'>
-              &lt; Back
-            </button>
-          </Link>
-        </div>
-        <div className='grid grid-cols-2 gap-12 p-12 min-h-[550px] bg-secondary shadow-lg shadow-white/20 sm:p-8 xs:p-4'>
+      <div className='w-[90vw] mx-auto mb-4 flex flex-col bg-primary'>
+        <div className='grid grid-cols-2 gap-12 p-12 min-h-[550px] bg-secondary shadow-lg shadow-white/20 sm:p-8 xs:p-4 mt-8'>
           {displayVideoOrImage}
           <div>{itemDetails}</div>
+        </div>
+
+        <div className='p-12 sm:p-8 xs:p-4 bg-secondary'>
+          <Reviews contentType={contentType} itemId={id} />
         </div>
       </div>
     </div>

@@ -26,7 +26,7 @@ export default function ItemCard({ item }: ItemCardProps) {
         />
 
         <div className='flex justify-between px-4 py-2'>
-          <h1 className='break-words text-secondary pr-3 text-2xl font-semibold'>
+          <h1 className='break-words text-secondary pr-3 text-xl font-semibold'>
             {'title' in item ? item.title : item.name}
           </h1>
           {voteAverage > 0 && <Vote voteValue={Math.round(voteAverage * 10) / 10} />}

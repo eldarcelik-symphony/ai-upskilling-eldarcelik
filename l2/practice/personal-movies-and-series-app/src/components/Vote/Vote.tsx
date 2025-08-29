@@ -1,5 +1,4 @@
 import React from 'react';
-import './Vote.css';
 
 type VoteProps = {
   voteValue: number;
@@ -7,7 +6,7 @@ type VoteProps = {
 
 export default function Vote({ voteValue }: VoteProps) {
   return (
-    <p className='vote-average'>
+    <p className='flex flex-col items-center text-danger text-base'>
       <i className='fas fa-star'></i>
       {voteValue}
     </p>

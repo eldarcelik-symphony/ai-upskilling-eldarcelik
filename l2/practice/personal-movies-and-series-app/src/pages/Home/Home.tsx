@@ -5,7 +5,6 @@ import ItemCard from '../../components/Item/ItemCard';
 import Loading from '../../components/Loading/Loading';
 import { CONTENT_TYPE } from '../../constants';
 import { IShow, IMovie } from '../../types';
-import './Home.css';
 
 export default function Home() {
   const { movies, shows, contentType, loading } = useContext(MoviesShowsContext);
@@ -24,7 +23,9 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <section className='grid-container'>{items}</section>
+      <section className='w-[90vw] mx-auto my-[35px] grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-y-10 gap-x-12 justify-items-center'>
+        {items}
+      </section>
     </>
   );
 }

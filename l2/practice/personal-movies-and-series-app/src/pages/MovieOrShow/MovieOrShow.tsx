@@ -6,7 +6,6 @@ import Loading from '../../components/Loading/Loading';
 import Vote from '../../components/Vote/Vote';
 import { IMovie, IShow } from '../../types';
 import { axios } from '../../axios';
-import './MovieOrShow.css';
 
 export default function MovieOrShow() {
   const { contentType } = useContext(MoviesShowsContext);
@@ -42,7 +41,7 @@ export default function MovieOrShow() {
     'videos' in item && item.videos.results.length > 0 ? (
       <iframe
         title='video'
-        className='center-media video'
+        className='justify-self-center'
         width='100%'
         height='100%'
         src={`https://www.youtube.com/embed/${video}`}
@@ -50,7 +49,7 @@ export default function MovieOrShow() {
       ></iframe>
     ) : (
       <img
-        className='center-media picture'
+        className='justify-self-center'
         src={item.posterPath ? `${IMAGE_PATH}${item.posterPath}` : DEFAULT_IMAGE}
         alt={'title' in item ? item.title : item.name}
         width='400px'
@@ -61,29 +60,33 @@ export default function MovieOrShow() {
   // Display item details
   const itemDetails = (
     <div>
-      <h1 className='item-title'>
+      <h1 className='text-primary text-3xl font-bold flex justify-between items-center'>
         {'title' in item ? item.title : item.name}
         {item.voteAverage > 0 && <Vote voteValue={Math.round(item.voteAverage * 10) / 10} />}
       </h1>
-      <hr />
-      <p className='release'>
+      <hr className='border-0 h-px bg-gradient-to-r from-black/75 to-transparent my-1' />
+      <p className='text-xs text-gray-500 py-1 whitespace-pre-wrap'>
         {'releaseDate' in item
           ? `Release Date: ${item.releaseDate}`
           : `First Air Date: ${item.firstAirDate} \nLast Air Date: ${item.lastAirDate}`}
       </p>
-      <p className='overview'>{item.overview.length > 0 ? item.overview : 'No additional information available.'}</p>
+      <p className='mt-4 text-lg leading-7'>
+        {item.overview.length > 0 ? item.overview : 'No additional information available.'}
+      </p>
     </div>
   );
 
   return (
-    <div className='bcg'>
-      <div className='content-container'>
-        <div style={{ background: '#1c2237' }}>
+    <div className='min-h-screen bg-primary pb-4'>
+      <div className='w-[90vw] mx-auto mb-4 flex flex-col bg-secondary'>
+        <div className='w-full bg-primary'>
           <Link to='/'>
-            <button className='button-back'>&lt; Back</button>
+            <button className='inline-flex items-center h-[35px] mx-[5px] px-6 py-2.5 text-base whitespace-nowrap text-center border-none rounded-lg outline-none cursor-pointer transition-all duration-200 bg-secondary text-primary hover:bg-gray-200 my-4 -ml-8'>
+              &lt; Back
+            </button>
           </Link>
         </div>
-        <div className='item-content'>
+        <div className='grid grid-cols-2 gap-12 p-12 min-h-[550px] bg-secondary shadow-lg shadow-white/20 sm:p-8 xs:p-4'>
           {displayVideoOrImage}
           <div>{itemDetails}</div>
         </div>

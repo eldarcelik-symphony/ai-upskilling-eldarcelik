@@ -4,7 +4,6 @@ import { MoviesShowsProvider } from './Context';
 import Home from './pages/Home/Home';
 import MovieOrShow from './pages/MovieOrShow/MovieOrShow';
 import Error from './pages/Error/Error';
-import './App.css';
 
 function App() {
   return (

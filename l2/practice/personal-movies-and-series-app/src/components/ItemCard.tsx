@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { MoviesShowsContext } from '../../Context';
-import { IMAGE_PATH, DEFAULT_IMAGE } from '../../constants';
-import Vote from '../../components/Vote/Vote';
-import { IMovie, IShow } from '../../types';
+import { MoviesShowsContext } from '../Context';
+import { IMAGE_PATH, DEFAULT_IMAGE } from '../constants';
+import Vote from './Vote';
+import { IMovie, IShow } from '../types';
 
 type ItemCardProps = {
   item: IMovie | IShow;

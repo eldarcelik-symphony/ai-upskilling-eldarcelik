@@ -1,7 +1,7 @@
 import React, { useContext, useMemo, useCallback } from 'react';
-import { MoviesShowsContext } from '../../Context';
-import { CONTENT_TYPE, SHOW_PLACEHOLDER, MOVIE_PLACEHOLDER } from '../../constants';
-import { AppContextInterface } from '../../types';
+import { MoviesShowsContext } from '../Context';
+import { CONTENT_TYPE, SHOW_PLACEHOLDER, MOVIE_PLACEHOLDER } from '../constants';
+import { AppContextInterface } from '../types';
 
 export default function Navbar() {
   const context = useContext(MoviesShowsContext) as AppContextInterface;

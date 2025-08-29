@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import { MoviesShowsContext } from '../../Context';
-import Navbar from '../../components/Navbar/Navbar';
-import ItemCard from '../../components/Item/ItemCard';
-import Loading from '../../components/Loading/Loading';
-import { CONTENT_TYPE } from '../../constants';
-import { IShow, IMovie } from '../../types';
+import { MoviesShowsContext } from '../Context';
+import Navbar from '../components/Navbar';
+import ItemCard from '../components/ItemCard';
+import Loading from '../components/Loading';
+import { CONTENT_TYPE } from '../constants';
+import { IShow, IMovie } from '../types';
 
 export default function Home() {
   const { movies, shows, contentType, loading } = useContext(MoviesShowsContext);

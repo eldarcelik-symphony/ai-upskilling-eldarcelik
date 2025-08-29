@@ -1,11 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { MoviesShowsContext } from '../../Context';
-import { IMAGE_PATH, DEFAULT_IMAGE } from '../../constants';
+import { MoviesShowsContext } from '../Context';
+import { IMAGE_PATH, DEFAULT_IMAGE } from '../constants';
 import { Link, useParams } from 'react-router-dom';
-import Loading from '../../components/Loading/Loading';
-import Vote from '../../components/Vote/Vote';
-import { IMovie, IShow } from '../../types';
-import { axios } from '../../axios';
+import Loading from '../components/Loading';
+import Vote from '../components/Vote';
+import { IMovie, IShow } from '../types';
+import { axios } from '../axios';
 
 export default function MovieOrShow() {
   const { contentType } = useContext(MoviesShowsContext);

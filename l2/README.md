@@ -29,7 +29,7 @@ Start Date: 25. Aug 2025. | Target Completion: 20. Oct 2025.
 | 27. Aug 2025. | Implement automatic snake_case to camelCase conversion via axios response interceptor with tests.                                         | 6h                | 4h               | Cursor    | 37%    |
 | 28. Aug 2025. | Refactor Navbar component from a class to the function component and add performance improvements.                                        | 4h                | 1h               | Cursor    | 75%    |
 | 28. Aug 2025. | Replace custom CSS with Tailwind inside the whole app                                                                                     | 8h                | 6h               | Cursor    | 25%    |
-| 29. Aug 2025. | Get reviews from API and display them at the end of details page with infinite pagination                                                 | 8h                | 4h               | Cursor    | 25%    |
+| 29. Aug 2025. | Get reviews from API and display them at the end of details page with infinite pagination                                                 | 8h                | 4h               | Cursor    | 50%    |
 
 ### Weekly Insights
 

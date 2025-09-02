@@ -11,14 +11,18 @@ Start Date: 25. Aug 2025. | Target Completion: 20. Oct 2025.
 - [x] [ChatGPT Prompt Engineering for Developers — DeepLearning.AI](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/) - 1.5h - Key takeaway: Write clear, structured prompts with examples, allow step-by-step reasoning, and ground answers in relevant information to reduce hallucinations.
 - [x] [Anthropic Prompt Engineering Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview) - 1h - Key takeaway: Success criteria that are controllable through prompt engineering.
 - [x] [Large Language Models explained briefly by 3Blue1Brown](https://www.youtube.com/watch?v=LPZh9BOjkQs) - 0.2h - Key takeaway: How LLM are developed and how they work, what are parameters in LLMs, what are transformers and feedforward and attention steps
-- [x] [Intro to LLMs — Andrej Karpathy (YouTube) by Andrej Karpathy](https://www.youtube.com/watch?v=zjkBMFhNj_g) - 1h - Key takeaway: How LLMs are trained (pretraining, finetuning, reinforcement learning), LLM as 'operative system', LLM security.
-- [x] [Deep Dive into LLMs like ChatGPT by Andrej Karpathy](https://www.youtube.com/watch?v=7xTGNNLPyMI&list=PLAqhIrjkxbuW9U8-vZ_s_cjKPT_FqRStI&index=3) - 3.5h - Key takeaway: How LLMs are built and trained, their challenges like hallucinations and jagged intelligence, key methods like RLFH, and major models.
+- [x] [Intro to LLMs — Andrej Karpathy (YouTube) by Andrej Karpathy](https://www.youtube.com/watch?v=zjkBMFhNj_g) - 1h - Key takeaway: How LLMs are trained (pretraining, supervised fine-tuning, RLHF), LLM as 'operative system', LLM security.
+- [x] [Deep Dive into LLMs like ChatGPT by Andrej Karpathy](https://www.youtube.com/watch?v=7xTGNNLPyMI&list=PLAqhIrjkxbuW9U8-vZ_s_cjKPT_FqRStI&index=3) - 3.5h - Key takeaway: How LLMs are built and trained, their challenges like hallucinations and jagged intelligence so we need to be careful of how to use AI, key methods like RLFH, and major models.
 - [x] [How I use LLMs by Andrej Karpathy](https://www.youtube.com/watch?v=EWvNQjAaOHw&list=PLAqhIrjkxbuW9U8-vZ_s_cjKPT_FqRStI&index=4) - 2.5h - Key takeaway: LLM interactions with examples, context window and tokens explanation, training phases with examples, tools used: internet search, deep search, uploads, images, speach, etc.
 - [ ] [Transformers, the tech behind LLMs by 3Blue1Brown](https://www.youtube.com/watch?v=wjZofJX0v4M&t=183s) - [hours] - Key takeaway: ...
 - [ ] [Attention in transformers, step-by-step by 3Blue1Brown](https://www.youtube.com/watch?v=eMlx5fFNoYc&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=7) - [hours] - Key takeaway: ...
 - [ ] [How might LLMs store facts by 3Blue1Brown](https://www.youtube.com/watch?v=9-Jl0dxWQs8&t=367s) - [hours] - Key takeaway: ...
-- [x] [State-Of-The-Art Prompting For AI Agents by Y Combinator](https://www.youtube.com/watch?v=DL82mGde6wo) - 0.5h - Key takeaway: How to think about using AI and different models. Explaining forward deployed engineers approach.
+- [x] [Prompting For AI Agents by Y Combinator](https://www.youtube.com/watch?v=DL82mGde6wo) - 0.5h - Key takeaway: How to think about using AI and different models. Explaining forward deployed engineers approach.
 - [x] [RAG vs Fine-Tuning vs Prompt Engineering: Optimizing AI Models by IBM](https://www.youtube.com/watch?v=zYGDpG-pTho) - 0.3h - Key takeaway: RAG retrieves external knowledge to ground model outputs, fine-tuning adapts a model’s weights to a domain or task, and prompt engineering shapes responses by carefully designing the input.
+- [x] [System Prompts (GitHub)](https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools) - 0.5h - Key takeaway: Useful examples of Cursor agent prompts, chat prompts, memory prompts.
+- [x] [Awesome Cursor rules (GitHub)](https://github.com/PatrickJS/awesome-cursorrules) - 1h. - Key takeaway: Useful examples of Cursor rules for various projects defined by technologies.
+- [x] [Cursor working with context](https://docs.cursor.com/en/guides/working-with-context) - 0.5h - Key takeaway: Context is the foundation of effective AI coding, consisting of intent (what you want) and state (what exists).
+- [x] [Harper Reed Blog](https://harper.blog/2025/02/16/my-llm-codegen-workflow-atm/) - 0.5h - Key takeaway: Approach to the Greenfield projects (idea, planning, execution) and Non-greenfield projects (get context, iterate) using AI workflows
 
 ### Practice Metrics
 
@@ -39,7 +43,10 @@ Start Date: 25. Aug 2025. | Target Completion: 20. Oct 2025.
   - Understanding that hallucinations aren’t just “mistakes,” but come from gaps in grounding, made me see why adding structure, step-by-step reasoning is essential.
   - Seeing how LLMs handle tokens, context windows, and external tools gave me a mental model for when the model alone is enough and when I should extend it.
   - The better we learn how something works, the better we will use it.
-- Week 2: [Breakthrough moment]
+  - RAG retrieves external knowledge to ground model outputs, fine-tuning adapts a model’s weights to a domain or task, and prompt engineering shapes responses by carefully designing the input.
+- Week 2:
+  - Rules provide persistent, reusable context at the prompt level. They are included at the start of the model context. This gives the AI consistent guidance for generating code, interpreting edits, or helping with workflows.
+  - Agent can directly create memories using tool calls when you explicitly ask it to remember something or when it notices important information that should be preserved for future sessions. We can create `memory.md` file in `.cursor` folder to have persistent memory and use it in the context.
 
 ## Week 3-4: Capstone Project
 

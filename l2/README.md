@@ -22,7 +22,10 @@ Start Date: 25. Aug 2025. | Target Completion: 20. Oct 2025.
 - [x] [System Prompts (GitHub)](https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools) - 0.5h - Key takeaway: Useful examples of Cursor agent prompts, chat prompts, memory prompts.
 - [x] [Awesome Cursor rules (GitHub)](https://github.com/PatrickJS/awesome-cursorrules) - 1h. - Key takeaway: Useful examples of Cursor rules for various projects defined by technologies.
 - [x] [Cursor working with context](https://docs.cursor.com/en/guides/working-with-context) - 0.5h - Key takeaway: Context is the foundation of effective AI coding, consisting of intent (what you want) and state (what exists).
-- [x] [Harper Reed Blog](https://harper.blog/2025/02/16/my-llm-codegen-workflow-atm/) - 0.5h - Key takeaway: Approach to the Greenfield projects (idea, planning, execution) and Non-greenfield projects (get context, iterate) using AI workflows
+- [x] [Harper Reed Blog - My LLM codegen workflow atm](https://harper.blog/2025/02/16/my-llm-codegen-workflow-atm/) - 0.5h - Key takeaway: Approach to the Greenfield projects (idea, planning, execution) and Non-greenfield projects (get context, iterate) using AI workflows
+- [x] [How I reduced 90% errors for my Cursor - video by AI Jason](https://www.youtube.com/watch?v=1L509JK8p1I) - 0.2h - Key takaway: Introduced TaskMaster - AI's personal project manager that can organize, research, expand, prioritize, and ship tasks effortlessly.
+- [x] [Best Cursor Workflow - video by AI Jason](https://www.youtube.com/watch?v=2PjmPU07KNs) - 1h - Key takeaway: From PRD to the deployed app using Cursor with the following steps: 1. Project Setup in md files -> 2. Add documentation in settings -> 3. Building the front-end -> 4 Connecting it with APIs -> 5. Building the backend -> 6. Improving the UI -> 7. Deployment
+- [x] [Sub-agents - video by AI Jason](https://www.youtube.com/watch?v=LCYBVpSB0Wo) - 0.2h - Key takeaway: Parent agent doesn't know the context of the sub-agent, it only knows the result of sub-agent. Parent agent needs to use `context.md` file to get the full context and after finishing the work it needs to update the file with new info. When passing task to the sub-agent, make sure to pass context file.
 
 ### Practice Metrics
 

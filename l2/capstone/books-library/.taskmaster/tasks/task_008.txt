@@ -1,0 +1,43 @@
+# Task ID: 8
+# Title: Implement Book Return Functionality
+# Status: To Do
+# Dependencies: 7
+# Priority: medium
+# Description: Allow users to return a borrowed book from their profile page, making the copy available again.
+# Details:
+On the user profile page, add a 'Return' button next to each borrowed book. When clicked, this should update the `returned_at` field in the `borrowed_books` table and increment the `available_copies` count in the `books` table.
+
+# Test Strategy:
+As a user, return a book from the profile page. Verify the book is removed from the 'currently borrowed' list. Check the public catalog page for that book and confirm its `available_copies` count has increased by one.
+
+# Subtasks:
+## 1. Create a PostgreSQL Function for Transactional Book Returns [pending]
+### Dependencies: None
+### Description: Write and deploy a SQL function in the Supabase SQL Editor to handle the book return process as a single atomic transaction. This ensures data integrity between the `books` and `borrowed_books` tables.
+### Details:
+Create a PostgreSQL function named `handle_book_return` that accepts `borrow_id_to_return` (UUID) and `book_id_to_update` (UUID) as arguments. The function must first verify that the borrow record exists and has not already been returned. Then, it should update the `returned_at` field to the current timestamp for the specified record in `borrowed_books` and increment the `available_copies` field by 1 for the corresponding book in the `books` table.
+
+## 2. Implement the `returnBook` Server Action [pending]
+### Dependencies: 8.1
+### Description: Create a Next.js server action that securely calls the database function to process a book return and handles data revalidation.
+### Details:
+In a relevant actions file (e.g., `lib/actions/books.ts`), define an async function `returnBook`. This action should: 1. Get the authenticated user's session. 2. Verify the user is the one who borrowed the book. 3. Call the `handle_book_return` PostgreSQL function using Supabase's `rpc()` client, passing the `borrowId` and `bookId`. 4. Upon successful execution, call `revalidatePath('/profile')` and `revalidatePath('/books/[id]')` to refresh the user's profile and the book's detail page.
+
+## 3. Add 'Return' Button to Borrowed Books List on Profile Page [pending]
+### Dependencies: None
+### Description: Modify the user profile page UI to display a 'Return' button next to each book that is currently borrowed.
+### Details:
+In the component responsible for rendering the list of borrowed books on `app/profile/page.tsx`, iterate through the books. For each book where `returned_at` is `null`, render a `<form>` containing a 'Return' button. The form should include hidden input fields for `borrowId` and `bookId` to pass the necessary data to the server action.
+
+## 4. Connect UI Button to Server Action with Pending State [pending]
+### Dependencies: 8.2, 8.3
+### Description: Wire up the 'Return' button's form to the `returnBook` server action and implement a pending UI state to give the user immediate feedback.
+### Details:
+Bind the `returnBook` server action to the `action` prop of the form. Create a client component for the button (e.g., `ReturnButton.tsx`) that uses the `useFormStatus` hook. The button should display a loading spinner or text (e.g., 'Returning...') and be disabled while `pending` is true to prevent multiple submissions.
+
+## 5. Implement User Feedback and Error Handling [pending]
+### Dependencies: 8.4
+### Description: Provide clear success or error feedback to the user after they attempt to return a book.
+### Details:
+Modify the `returnBook` server action to return a state object (e.g., `{ success: true }` or `{ error: '...' }`). On the profile page, use the `useFormState` hook to manage the form's state. Based on the returned state, display a toast notification (e.g., using `sonner`) to inform the user if the return was successful or if an error occurred. The successful revalidation will automatically remove the book from the list.
+

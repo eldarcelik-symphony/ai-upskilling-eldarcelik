@@ -1,0 +1,43 @@
+# Task ID: 2
+# Title: Implement User Authentication and Role-Based Access
+# Status: To Do
+# Dependencies: 1
+# Priority: high
+# Description: Build the complete user authentication flow including registration, login, email verification, and role-based route protection.
+# Details:
+Create sign-up and login pages with forms. Use Supabase Auth for user management and JWT-based sessions. Integrate Resend to send verification emails upon registration. Implement middleware to protect admin routes, allowing access only to users with the 'ADMIN' role.
+
+# Test Strategy:
+Test the user registration flow, including receiving the verification email. Test login with valid and invalid credentials. Attempt to access an admin route as a regular user and verify access is denied. Confirm admins can access protected routes.
+
+# Subtasks:
+## 1. Implement Sign-up and Login UI with Server Actions [pending]
+### Dependencies: None
+### Description: Create the user interface for the sign-up and login pages using the existing Shadcn UI components. Implement server actions to handle form submissions for both registration and authentication using the Supabase client.
+### Details:
+In `app/signup/page.tsx`, build a form with fields for email and password. Create a server action that uses the Supabase server client to call `supabase.auth.signUp`. In `app/login/page.tsx`, build a similar form and a server action that calls `supabase.auth.signInWithPassword`. Ensure proper error handling and user feedback for both forms.
+
+## 2. Set Up `profiles` Table and Trigger for User Role Management [pending]
+### Dependencies: None
+### Description: Create a `profiles` table in the Supabase database to store user-specific data, including their role. Implement a database trigger to automatically create a new profile for each new user upon registration.
+### Details:
+Using the Supabase SQL Editor, create a new table named `profiles` with columns like `id` (referencing `auth.users.id`), `email`, `role` (TEXT, default 'USER'), and `approval_status` (TEXT, default 'Pending'). Then, create a PostgreSQL function and a trigger that fires on `INSERT` into the `auth.users` table to populate the new `profiles` table with the corresponding user data.
+
+## 3. Integrate Resend for Custom Email Verification [pending]
+### Dependencies: 2.1
+### Description: Replace the default Supabase authentication emails by creating a Supabase Edge Function that uses the Resend API to send a verification email when a new user signs up.
+### Details:
+First, disable the default 'Confirm email' template in Supabase Auth settings. Create a new Supabase Edge Function (e.g., `send-verification-email`). This function will be triggered by a database webhook on new user creation. Inside the function, use the Resend SDK to send an email containing the `confirmation_url` from the new user's data. Store the Resend API key as a secret in Supabase.
+
+## 4. Implement Role-Based Access Control in Middleware [pending]
+### Dependencies: 2.1, 2.2
+### Description: Modify the existing `middleware.ts` file to protect all routes under the `/admin` path, allowing access only to users with the 'ADMIN' role.
+### Details:
+In `middleware.ts`, after the session is retrieved, check if the request path starts with `/admin`. If it does, use the Supabase client to query the `profiles` table for the current user's role. If the user's role is not 'ADMIN', redirect them to the homepage. If there is no user session, redirect them to the login page. Ensure the middleware correctly handles fetching the user profile associated with the session.
+
+## 5. Create a Server-Side Utility to Fetch Current User with Role [pending]
+### Dependencies: 2.2
+### Description: Develop a reusable server-side helper function to retrieve the currently authenticated user's session and their corresponding profile data, including their role and approval status.
+### Details:
+In the `lib` directory, create a new file (e.g., `lib/auth.ts`). Define an async function, `getUserWithProfile`, that creates a Supabase server client, gets the current user from `supabase.auth.getUser()`, and if a user exists, queries the `profiles` table for their full profile. This function will encapsulate the logic of joining `auth.users` with `profiles` and can be used in the middleware and other server components/actions.
+

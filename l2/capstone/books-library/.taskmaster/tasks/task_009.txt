@@ -1,0 +1,43 @@
+# Task ID: 9
+# Title: Build Admin Dashboard for Borrowing Activity
+# Status: To Do
+# Dependencies: 6
+# Priority: low
+# Description: Create a centralized view for admins to monitor all currently borrowed books across the platform.
+# Details:
+Develop an admin-only page that lists all active borrowing records (where `returned_at` is null). The table should include book title, borrower's email, and borrow date. Implement search and pagination for this view.
+
+# Test Strategy:
+As an admin, access the dashboard and verify it shows all books currently on loan. Test the search and pagination. Cross-reference the data with user profiles to ensure accuracy and completeness.
+
+# Subtasks:
+## 1. Create Server-Side Function to Fetch Active Borrowing Records [pending]
+### Dependencies: None
+### Description: Develop a server-side function to query the Supabase database for all active borrowing records. The function should join `borrowed_books` with the `books` and `users` tables to retrieve the book title and borrower's email. It must filter for records where `returned_at` is null.
+### Details:
+Create a new file, e.g., `lib/data/borrowing.ts`. The function should accept arguments for search query (to filter by book title or user email), current page, and items per page. It needs to return both the paginated list of borrowing records and the total count of matching records for the pagination component.
+
+## 2. Set Up Admin Borrowing Page and Basic Data Table [pending]
+### Dependencies: 9.1
+### Description: Create the new page for the admin borrowing dashboard at `app/admin/borrowing/page.tsx`. This page will call the data-fetching function from the previous subtask and display the results in a basic table.
+### Details:
+This page should be a server component that reads search parameters from the URL. Use the Shadcn UI `<Table>` component to structure the data. The initial table should display columns for 'Book Title', 'Borrower Email', and 'Borrow Date'. Ensure the admin layout is applied to this new page for consistent styling and navigation.
+
+## 3. Implement Search Functionality on the Dashboard [pending]
+### Dependencies: 9.2
+### Description: Add a search input field to the borrowing dashboard that allows admins to filter the list of borrowed books by book title or borrower's email.
+### Details:
+Following the pattern likely used in the User Management dashboard (Task 5), create a client component for the search input. Use the `useSearchParams` and `useRouter` hooks to update the URL with the search query as the user types (with debouncing). The `app/admin/borrowing/page.tsx` server component will read this query from its `searchParams` prop and pass it to the data-fetching function.
+
+## 4. Implement Pagination for the Borrowing Records Table [pending]
+### Dependencies: 9.2
+### Description: Add a pagination component to the bottom of the borrowing records table to handle large datasets.
+### Details:
+Utilize the existing Shadcn UI `<Pagination>` component, similar to its implementation in the User Management or Public Catalog pages. The component should be driven by the total record count returned by the data-fetching function. Clicking on a page number should update the `page` URL search parameter, triggering the server component to refetch the correct data slice.
+
+## 5. Secure the Borrowing Dashboard for Admin Access Only [pending]
+### Dependencies: 9.2
+### Description: Implement an authorization check to ensure that only users with an 'admin' role can access the `/admin/borrowing` page.
+### Details:
+In the `app/admin/borrowing/page.tsx` component (or a shared `app/admin/layout.tsx`), fetch the current user's session and profile data from Supabase. Check if the user's role is 'admin'. If the user is not an admin, redirect them to a different page, such as the homepage or a 'not authorized' page.
+

@@ -1,0 +1,43 @@
+# Task ID: 1
+# Title: Project Setup and Database Schema
+# Status: To Do
+# Dependencies: None
+# Priority: high
+# Description: Initialize the Next.js project, configure Supabase, Tailwind, and Shadcn, and implement the database schema.
+# Details:
+Setup a new Next.js project using the App Router. Integrate the Supabase client for database and auth. Configure Tailwind CSS and initialize Shadcn. Create the `users`, `books`, and `borrowed_books` tables in Supabase according to the PRD specifications.
+
+# Test Strategy:
+Verify the Next.js application runs locally without errors. Confirm the Supabase client can connect to the backend. Manually inspect the Supabase dashboard to ensure all tables, columns, and relationships are created correctly.
+
+# Subtasks:
+## 1. Initialize Next.js Project with App Router and TypeScript [pending]
+### Dependencies: None
+### Description: Create a new Next.js application using the `create-next-app` CLI, ensuring it is configured with the App Router, TypeScript, and ESLint.
+### Details:
+Run `npx create-next-app@latest` in the project directory. During the setup prompts, select 'Yes' for TypeScript, ESLint, and the App Router. This will form the foundational structure of the application.
+
+## 2. Configure Tailwind CSS and Initialize Shadcn/ui [pending]
+### Dependencies: 1.1
+### Description: Set up Tailwind CSS for utility-first styling and initialize the Shadcn/ui component library to streamline UI development.
+### Details:
+Follow the official Next.js documentation to install and configure Tailwind CSS by creating `tailwind.config.ts` and `postcss.config.js`. Then, run `npx shadcn-ui@latest init` to set up the necessary configurations, including `components.json` and updating `globals.css`.
+
+## 3. Integrate Supabase Client for Database and Auth [pending]
+### Dependencies: 1.1
+### Description: Set up a new Supabase project and integrate the Supabase client into the Next.js application using environment variables.
+### Details:
+Create a new project on the Supabase dashboard. Install the required Supabase packages (`@supabase/supabase-js`, `@supabase/auth-helpers-nextjs`). Create a `.env.local` file and add your Supabase Project URL and Anon Key. Create a utility file (e.g., `lib/supabase/client.ts`) to export a singleton Supabase client instance.
+
+## 4. Create `users` and `books` Tables in Supabase [pending]
+### Dependencies: 1.3
+### Description: Define and implement the database schema for the `users` and `books` tables using the Supabase SQL editor.
+### Details:
+In the Supabase SQL Editor, create the `users` table with columns for `id` (UUID, referencing `auth.users.id`), `email`, `role` (e.g., 'USER', 'ADMIN'), and `approval_status`. Create the `books` table with columns for `id`, `title`, `author`, `isbn`, `total_copies`, and `available_copies`.
+
+## 5. Create `borrowed_books` Table and Establish Relationships [pending]
+### Dependencies: 1.4
+### Description: Create the `borrowed_books` table to track book loans and establish foreign key relationships to the `users` and `books` tables.
+### Details:
+Using the Supabase SQL Editor, create the `borrowed_books` table. It should include `id`, `book_id`, `user_id`, `borrowed_at`, and a nullable `returned_at`. Define foreign key constraints on `book_id` to reference `books(id)` and on `user_id` to reference `users(id)`.
+

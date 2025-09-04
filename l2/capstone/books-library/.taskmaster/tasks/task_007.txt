@@ -1,0 +1,43 @@
+# Task ID: 7
+# Title: Create User Profile Page with Borrowed Books
+# Status: To Do
+# Dependencies: 6
+# Priority: medium
+# Description: Build a profile page for users to view their information and a list of the books they have currently borrowed.
+# Details:
+Create a protected route for the user profile. The page should display the user's email and a list of all books currently borrowed by that user. This involves fetching data from the `borrowed_books` table joined with the `books` table.
+
+# Test Strategy:
+Log in as a user who has borrowed books and verify the list appears correctly on their profile. Log in as a user with no borrowed books and confirm an empty state is shown. Check that book details (title, author) are correct.
+
+# Subtasks:
+## 1. Create Server Action to Fetch User's Borrowed Books [pending]
+### Dependencies: None
+### Description: Create a new server action that retrieves all books currently borrowed by the logged-in user. This action will query the Supabase database, joining the 'borrowed_books' and 'books' tables.
+### Details:
+In the `lib/actions/` directory, create a new file `user.actions.ts`. Inside this file, define an async function `getBorrowedBooks`. This function should first get the current user's session using the server Supabase client (from `lib/supabase/server.ts`). If a user exists, query the `borrowed_books` table, filtering by the `user_id`. The query must join with the `books` table to include details like title, author, and cover image. The function should return the list of joined book data.
+
+## 2. Create the Basic Protected Profile Page Route [pending]
+### Dependencies: None
+### Description: Set up the file and basic component for the user profile page at the `/profile` route. This page should be a server component that fetches and displays the current user's email.
+### Details:
+Create a new file at `app/profile/page.tsx`. This will be an `async` server component. Use the existing `getCurrentUser` server action (or create one if it doesn't exist, similar to what's used in the Header) to fetch the user's data. The component should display the user's email. The route is already protected by the existing `middleware.ts`, which redirects unauthenticated users from `/profile` to `/login`.
+
+## 3. Develop a UI Component for a Single Borrowed Book [pending]
+### Dependencies: None
+### Description: Create a reusable React component to display the details of a single borrowed book in a card format.
+### Details:
+Create a new component file, for example, `components/cards/BorrowedBookCard.tsx`. This component should accept props for book details (e.g., `title`, `author`, `cover_image_url`). Use existing Shadcn UI components like `<Card>`, `<CardHeader>`, `<CardTitle>`, and `<CardContent>` to structure the display. Include an `<img>` tag for the book's cover.
+
+## 4. Integrate Data and Display Borrowed Books on Profile Page [pending]
+### Dependencies: 7.1, 7.2, 7.3
+### Description: On the profile page, call the server action to get the borrowed books and render them using the `BorrowedBookCard` component. Handle the case where the user has no borrowed books.
+### Details:
+In `app/profile/page.tsx`, import and call the `getBorrowedBooks` server action created in subtask 1. Map over the returned array of books and render a `BorrowedBookCard` for each item. If the array is empty, display a message such as 'You have no books currently borrowed.' Wrap the list in a container and add a heading like 'My Borrowed Books'.
+
+## 5. Add Navigation Link to Profile Page in Header [pending]
+### Dependencies: 7.2
+### Description: Add a link to the new `/profile` page in the main application header, ensuring it is only visible to authenticated users.
+### Details:
+Locate and edit the main navigation component, likely `components/shared/Header.tsx`. This component already fetches the user session to conditionally render links. Within the block that checks if a user is logged in, add a new Next.js `<Link>` component that navigates to `/profile` with the text 'Profile'.
+

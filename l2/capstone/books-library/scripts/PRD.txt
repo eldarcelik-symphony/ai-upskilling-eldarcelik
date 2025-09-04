@@ -1,0 +1,99 @@
+# Overview
+This document outlines the requirements for a Book Rental Library website. The platform will serve two main roles: Users who can borrow books, and Admins who manage the platform's content and users. The goal is to create a simple, intuitive interface for managing and renting books online.
+
+# Core Features
+
+## 1. User Authentication & Authorization
+- **Description:** Secure user registration, login, and session management. The system must differentiate between 'User' and 'Admin' roles and restrict access to features accordingly.
+- **Implementation:**
+    - Users can sign up with email and password.
+    - Email verification using Resend is required upon registration.
+    - Login functionality for returning users.
+    - Secure session management (e.g., using Supabase Auth with JWTs).
+    - Role-based access control (RBAC) to protect routes and actions. Admins have full access; Users have restricted access.
+
+## 2. User Management (Admin)
+- **Description:** Admins need to manage all registered users. A key feature is the user approval workflow.
+- **Implementation:**
+    - Admin dashboard displays a list of all registered users.
+    - The user list must include their approval status.
+    - Admins can approve or reject new users who have verified their email. Users cannot borrow books until approved.
+    - The user table must support pagination and search by user name or email.
+
+## 3. Book Management (Admin)
+- **Description:** Admins are responsible for managing the library's book catalog.
+- **Implementation:**
+    - An interface for Admins to add, edit, and delete books.
+    - Each book should have attributes like title, author, description, cover image, and number of available copies.
+    - The book list table must support pagination and search by title or author.
+    - Forms for adding/editing books will use React Hook Form for state management and Zod for validation.
+
+## 4. Book Catalog & Borrowing (User)
+- **Description:** Users can browse the book catalog, view details, and borrow available books.
+- **Implementation:**
+    - A public page listing all available books with search and pagination.
+    - A detailed page for each book showing its full description, author, and availability.
+    - An approved user can borrow a book from the detail page. The borrow button should be disabled if the user is not approved or if no copies are available.
+    - Borrowing a book decrements the available copies count.
+
+## 5. User Profile
+- **Description:** A dedicated space for users to view their information and borrowed books.
+- **Implementation:**
+    - A profile page displaying the user's basic data (e.g., email).
+    - A list of all books currently borrowed by the user.
+    - An option for the user to return a book, which increments the available copies count.
+
+## 6. Borrowed Books Overview (Admin)
+- **Description:** Admins need a centralized view of all borrowing activity.
+- **Implementation:**
+    - A page listing all currently borrowed books across all users.
+    - The list should include book title, borrower's email, and borrow date.
+    - This table must support pagination and search.
+
+# User Experience
+- **User Personas:**
+    - **Admin:** Manages the platform, ensuring user validity and a well-maintained book catalog.
+    - **User:** A book enthusiast who wants to browse and borrow books from the library.
+- **Key User Flows:**
+    1.  **New User Registration:** Sign up -> Verify Email -> Await Admin Approval.
+    2.  **Book Borrowing:** Login -> Browse Books -> View Details -> Borrow Book.
+    3.  **Admin Book Management:** Login -> Go to Books List -> Add/Edit/Delete Book.
+- **UI/UX Considerations:**
+    - The interface will be built with Next.js, Tailwind CSS, and Shadcn for a clean, modern, and responsive design.
+
+# Technical Architecture
+- **Frontend:** Next.js (App Router), React, Tailwind CSS, Shadcn components.
+- **Forms:** React Hook Form with Zod for schema validation.
+- **Backend/Database:** Supabase for database, authentication, and storage (for book covers).
+- **Email:** Resend for transactional emails (e.g., email verification).
+- **Data Models:**
+    - `users`: id, email, role ('ADMIN', 'USER'), approved (boolean).
+    - `books`: id, title, author, description, cover_image_url, total_copies, available_copies.
+    - `borrowed_books`: id, book_id (FK to books), user_id (FK to users), borrowed_at, returned_at (nullable).
+
+# Development Roadmap
+## Phase 1: Foundation & Admin Core
+1.  Setup Next.js project with Supabase, Tailwind, and Shadcn.
+2.  Implement database schema in Supabase.
+3.  Implement User Authentication (Sign up, Login, Email Verification).
+4.  Implement basic Admin role protection for specific routes.
+5.  Build the Book Management (CRUD) feature for Admins.
+
+## Phase 2: User Features
+1.  Build the public book catalog page with search/pagination.
+2.  Build the book detail page.
+3.  Implement the user approval flow for Admins.
+4.  Implement the book borrowing functionality for approved users.
+
+## Phase 3: Dashboards & Profiles
+1.  Build the Admin dashboard for user management.
+2.  Build the Admin dashboard for viewing borrowed books.
+3.  Build the User Profile page to view borrowed books.
+4.  Implement the book return functionality.
+
+# Logical Dependency Chain
+1.  **Project Setup & Auth:** The absolute foundation. Nothing works without a project and the ability to sign in.
+2.  **Book Management (Admin):** We need books in the system before users can see or borrow them.
+3.  **User-Facing Catalog:** Once books exist, users need to be able to see them.
+4.  **Admin Approval & User Borrowing:** The core user interaction loop. This depends on users being able to register and admins being able to manage them.
+5.  **Profiles & Dashboards:** These pages display data generated by the core features, so they come last.

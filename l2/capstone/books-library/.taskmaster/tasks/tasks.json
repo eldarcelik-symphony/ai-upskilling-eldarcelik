@@ -1,0 +1,676 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Project Setup and Database Schema",
+        "description": "Initialize the Next.js project, configure Supabase, Tailwind, and Shadcn, and implement the database schema.",
+        "details": "Setup a new Next.js project using the App Router. Integrate the Supabase client for database and auth. Configure Tailwind CSS and initialize Shadcn. Create the `users`, `books`, and `borrowed_books` tables in Supabase according to the PRD specifications.",
+        "testStrategy": "Verify the Next.js application runs locally without errors. Confirm the Supabase client can connect to the backend. Manually inspect the Supabase dashboard to ensure all tables, columns, and relationships are created correctly.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "To Do",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Initialize Next.js Project with App Router and TypeScript",
+            "description": "Create a new Next.js application using the `create-next-app` CLI, ensuring it is configured with the App Router, TypeScript, and ESLint.",
+            "dependencies": [],
+            "details": "Run `npx create-next-app@latest` in the project directory. During the setup prompts, select 'Yes' for TypeScript, ESLint, and the App Router. This will form the foundational structure of the application.",
+            "status": "pending",
+            "testStrategy": "After initialization, run `npm run dev` and verify that the default Next.js welcome page loads successfully at `http://localhost:3000` without any compilation errors."
+          },
+          {
+            "id": 2,
+            "title": "Configure Tailwind CSS and Initialize Shadcn/ui",
+            "description": "Set up Tailwind CSS for utility-first styling and initialize the Shadcn/ui component library to streamline UI development.",
+            "dependencies": [
+              "1.1"
+            ],
+            "details": "Follow the official Next.js documentation to install and configure Tailwind CSS by creating `tailwind.config.ts` and `postcss.config.js`. Then, run `npx shadcn-ui@latest init` to set up the necessary configurations, including `components.json` and updating `globals.css`.",
+            "status": "pending",
+            "testStrategy": "Install a sample Shadcn component like the Button (`npx shadcn-ui@latest add button`). Import and use this component in `app/page.tsx`. Verify it renders on the homepage with the correct default styling."
+          },
+          {
+            "id": 3,
+            "title": "Integrate Supabase Client for Database and Auth",
+            "description": "Set up a new Supabase project and integrate the Supabase client into the Next.js application using environment variables.",
+            "dependencies": [
+              "1.1"
+            ],
+            "details": "Create a new project on the Supabase dashboard. Install the required Supabase packages (`@supabase/supabase-js`, `@supabase/auth-helpers-nextjs`). Create a `.env.local` file and add your Supabase Project URL and Anon Key. Create a utility file (e.g., `lib/supabase/client.ts`) to export a singleton Supabase client instance.",
+            "status": "pending",
+            "testStrategy": "Create a server component on a test page that attempts a simple query, like fetching a list of buckets from Supabase storage. Confirm that the connection is successful and data is returned without errors."
+          },
+          {
+            "id": 4,
+            "title": "Create `users` and `books` Tables in Supabase",
+            "description": "Define and implement the database schema for the `users` and `books` tables using the Supabase SQL editor.",
+            "dependencies": [
+              "1.3"
+            ],
+            "details": "In the Supabase SQL Editor, create the `users` table with columns for `id` (UUID, referencing `auth.users.id`), `email`, `role` (e.g., 'USER', 'ADMIN'), and `approval_status`. Create the `books` table with columns for `id`, `title`, `author`, `isbn`, `total_copies`, and `available_copies`.",
+            "status": "pending",
+            "testStrategy": "Navigate to the Table Editor in the Supabase dashboard. Verify that both the `users` and `books` tables have been created with all specified columns, correct data types, and primary key constraints."
+          },
+          {
+            "id": 5,
+            "title": "Create `borrowed_books` Table and Establish Relationships",
+            "description": "Create the `borrowed_books` table to track book loans and establish foreign key relationships to the `users` and `books` tables.",
+            "dependencies": [
+              "1.4"
+            ],
+            "details": "Using the Supabase SQL Editor, create the `borrowed_books` table. It should include `id`, `book_id`, `user_id`, `borrowed_at`, and a nullable `returned_at`. Define foreign key constraints on `book_id` to reference `books(id)` and on `user_id` to reference `users(id)`.",
+            "status": "pending",
+            "testStrategy": "In the Supabase dashboard, inspect the `borrowed_books` table to confirm the foreign key relationships are active. Attempt to insert a row with a non-existent `user_id` or `book_id` to ensure the constraints prevent invalid data entry."
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Implement User Authentication and Role-Based Access",
+        "description": "Build the complete user authentication flow including registration, login, email verification, and role-based route protection.",
+        "details": "Create sign-up and login pages with forms. Use Supabase Auth for user management and JWT-based sessions. Integrate Resend to send verification emails upon registration. Implement middleware to protect admin routes, allowing access only to users with the 'ADMIN' role.",
+        "testStrategy": "Test the user registration flow, including receiving the verification email. Test login with valid and invalid credentials. Attempt to access an admin route as a regular user and verify access is denied. Confirm admins can access protected routes.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "To Do",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Sign-up and Login UI with Server Actions",
+            "description": "Create the user interface for the sign-up and login pages using the existing Shadcn UI components. Implement server actions to handle form submissions for both registration and authentication using the Supabase client.",
+            "dependencies": [],
+            "details": "In `app/signup/page.tsx`, build a form with fields for email and password. Create a server action that uses the Supabase server client to call `supabase.auth.signUp`. In `app/login/page.tsx`, build a similar form and a server action that calls `supabase.auth.signInWithPassword`. Ensure proper error handling and user feedback for both forms.",
+            "status": "pending",
+            "testStrategy": "Test registration with a new email. Verify a success message is shown. Test login with both correct and incorrect credentials to ensure error messages are displayed properly."
+          },
+          {
+            "id": 2,
+            "title": "Set Up `profiles` Table and Trigger for User Role Management",
+            "description": "Create a `profiles` table in the Supabase database to store user-specific data, including their role. Implement a database trigger to automatically create a new profile for each new user upon registration.",
+            "dependencies": [],
+            "details": "Using the Supabase SQL Editor, create a new table named `profiles` with columns like `id` (referencing `auth.users.id`), `email`, `role` (TEXT, default 'USER'), and `approval_status` (TEXT, default 'Pending'). Then, create a PostgreSQL function and a trigger that fires on `INSERT` into the `auth.users` table to populate the new `profiles` table with the corresponding user data.",
+            "status": "pending",
+            "testStrategy": "After setting up the trigger, register a new user via the UI. Check the `profiles` table in Supabase to confirm that a new row was automatically created with the correct `id` and the default role 'USER'."
+          },
+          {
+            "id": 3,
+            "title": "Integrate Resend for Custom Email Verification",
+            "description": "Replace the default Supabase authentication emails by creating a Supabase Edge Function that uses the Resend API to send a verification email when a new user signs up.",
+            "dependencies": [
+              "2.1"
+            ],
+            "details": "First, disable the default 'Confirm email' template in Supabase Auth settings. Create a new Supabase Edge Function (e.g., `send-verification-email`). This function will be triggered by a database webhook on new user creation. Inside the function, use the Resend SDK to send an email containing the `confirmation_url` from the new user's data. Store the Resend API key as a secret in Supabase.",
+            "status": "pending",
+            "testStrategy": "Register a new user. Verify that no email is sent from the default Supabase provider. Confirm that a custom-formatted email from Resend is received at the registration address and that the verification link works correctly."
+          },
+          {
+            "id": 4,
+            "title": "Implement Role-Based Access Control in Middleware",
+            "description": "Modify the existing `middleware.ts` file to protect all routes under the `/admin` path, allowing access only to users with the 'ADMIN' role.",
+            "dependencies": [
+              "2.1",
+              "2.2"
+            ],
+            "details": "In `middleware.ts`, after the session is retrieved, check if the request path starts with `/admin`. If it does, use the Supabase client to query the `profiles` table for the current user's role. If the user's role is not 'ADMIN', redirect them to the homepage. If there is no user session, redirect them to the login page. Ensure the middleware correctly handles fetching the user profile associated with the session.",
+            "status": "pending",
+            "testStrategy": "Log in as a regular user (role 'USER') and attempt to navigate to `/admin`. Verify you are redirected. Manually update a user's role to 'ADMIN' in the database, log in as that user, and verify you can successfully access the `/admin` page."
+          },
+          {
+            "id": 5,
+            "title": "Create a Server-Side Utility to Fetch Current User with Role",
+            "description": "Develop a reusable server-side helper function to retrieve the currently authenticated user's session and their corresponding profile data, including their role and approval status.",
+            "dependencies": [
+              "2.2"
+            ],
+            "details": "In the `lib` directory, create a new file (e.g., `lib/auth.ts`). Define an async function, `getUserWithProfile`, that creates a Supabase server client, gets the current user from `supabase.auth.getUser()`, and if a user exists, queries the `profiles` table for their full profile. This function will encapsulate the logic of joining `auth.users` with `profiles` and can be used in the middleware and other server components/actions.",
+            "status": "pending",
+            "testStrategy": "Call this new utility function from a server component on a test page. Log in as a user and verify the function correctly returns the user's email, role, and approval status. Log out and verify it returns null."
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Build Admin Book Management (CRUD)",
+        "description": "Develop the admin-only interface for creating, reading, updating, and deleting books in the library catalog.",
+        "details": "Create an admin-protected page to display a list of all books with pagination and search. Implement forms using React Hook Form and Zod for adding and editing book details (title, author, cover image, copies). Use Supabase Storage for cover image uploads.",
+        "testStrategy": "As an admin, create a new book and verify it appears in the list. Edit an existing book's details and confirm the changes are saved. Delete a book and ensure it is removed. Test form validation for required fields and data types.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "To Do",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Protected Admin Route and Book Data Table Component",
+            "description": "Set up the basic infrastructure for the admin book management page. This includes creating a new route group for admin pages, implementing role-based access control, and building a reusable data table component shell for displaying books.",
+            "dependencies": [],
+            "details": "Create a new route group `app/(admin)`. In `app/(admin)/layout.tsx`, fetch the user's profile and redirect non-admin users. Create the page file `app/(admin)/books/page.tsx`. In a new file, `app/(admin)/books/components/data-table.tsx`, build a client component that uses Shadcn's `Table` component to render columns and data. This initial version will use mock data and define the columns (Cover, Title, Author, Copies, Actions).",
+            "status": "pending",
+            "testStrategy": "Log in as a non-admin user and try to access `/books`; verify redirection. Log in as an admin and verify the page loads with the table shell and mock data."
+          },
+          {
+            "id": 2,
+            "title": "Implement Server-Side Book Fetching with Search and Pagination",
+            "description": "Connect the data table to the Supabase backend to fetch and display a paginated list of all books. Implement server-side search functionality based on URL query parameters.",
+            "dependencies": [
+              "3.1"
+            ],
+            "details": "Create a new server action file `lib/actions/book.actions.ts`. Implement a function `getBooks({ page, limit, query })` that queries the 'books' table in Supabase with pagination and a text search on 'title' and 'author'. In `app/(admin)/books/page.tsx`, read the search parameters from the URL, call this new server action, and pass the fetched data and pagination details to the `data-table` client component. Wire up the Shadcn `Pagination` and `Input` components in the data table to update the URL search parameters.",
+            "status": "pending",
+            "testStrategy": "Verify the table on `/books` populates with data from the database. Test the pagination controls to navigate between pages. Use the search input to filter books by title or author and confirm the results are accurate."
+          },
+          {
+            "id": 3,
+            "title": "Develop 'Add Book' Form with Validation and Image Upload",
+            "description": "Create a modal form for adding new books, complete with client-side validation using Zod and React Hook Form, and server-side logic for inserting the data and uploading the cover image to Supabase Storage.",
+            "dependencies": [
+              "3.1"
+            ],
+            "details": "Create a new component `app/(admin)/books/components/book-form.tsx`. Use Shadcn's `Dialog` component to house a form built with `react-hook-form` and the `Form` component. Define a Zod schema for the book (title, author, copies, coverImage). The form submission will trigger a new server action `createBook(formData)` in `lib/actions/book.actions.ts`. This action will upload the cover image to a 'book-covers' bucket in Supabase Storage and then insert the book record (with the image URL) into the 'books' table. Use `revalidatePath('/books')` upon success.",
+            "status": "pending",
+            "testStrategy": "Open the 'Add Book' modal. Test validation by submitting an empty form and an invalid file type. Successfully submit the form with a valid cover image and book details. Verify the new book appears in the data table and the image is present in Supabase Storage."
+          },
+          {
+            "id": 4,
+            "title": "Implement 'Edit Book' Functionality",
+            "description": "Enable admins to edit the details of an existing book using the same form component created for adding books, pre-filled with the book's current data.",
+            "dependencies": [
+              "3.2",
+              "3.3"
+            ],
+            "details": "Add an 'Edit' option to the `DropdownMenu` in the 'Actions' column of the data table. Clicking 'Edit' will open the `book-form` component in a dialog, populated with the selected book's data. Create a new server action `updateBook(bookId, formData)` in `book.actions.ts`. This action will handle updating the text fields and conditionally uploading a new cover image if one is provided, deleting the old one if it's replaced. The form submission should call this new action.",
+            "status": "pending",
+            "testStrategy": "Click the 'Edit' button for a book. Verify the form appears with the correct data pre-filled. Change the title and number of copies, then save. Confirm the data table updates with the new information. Edit the book again, this time changing the cover image, and verify the old image is replaced in storage."
+          },
+          {
+            "id": 5,
+            "title": "Implement 'Delete Book' with Confirmation Dialog",
+            "description": "Add the functionality to delete a book from the catalog. This includes a confirmation step to prevent accidental deletions and ensures the associated cover image is removed from storage.",
+            "dependencies": [
+              "3.2"
+            ],
+            "details": "Add a 'Delete' option to the 'Actions' column's `DropdownMenu`. On click, trigger a Shadcn `AlertDialog` to confirm the action. Upon confirmation, call a new server action `deleteBook(bookId)` in `book.actions.ts`. This action must first delete the associated cover image from Supabase Storage and then delete the book record from the database. Use `revalidatePath('/books')` to refresh the list.",
+            "status": "pending",
+            "testStrategy": "Click the 'Delete' button for a book. Cancel the action from the confirmation dialog and verify the book remains. Click 'Delete' again and confirm. Verify the book is removed from the UI and the database, and its cover image is deleted from Supabase Storage."
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Develop Public Book Catalog and Detail Pages",
+        "description": "Create the public-facing pages for users to browse the book catalog and view individual book details.",
+        "details": "Build a main catalog page that lists all books, including their cover image, title, and author. Implement server-side search (by title/author) and pagination. Create a dynamic route `/[bookId]` to display a detailed page for each book.",
+        "testStrategy": "Verify the catalog page loads and displays books from the database. Test the search and pagination to ensure they function correctly. Navigate to a book detail page and confirm all information is displayed accurately.",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "To Do",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Book Catalog Page with Initial Data Fetching",
+            "description": "Set up the main public-facing book catalog page at the `/books` route. This page will be a server component that fetches and displays a grid of all available books from the database.",
+            "dependencies": [],
+            "details": "Create a new route directory `app/books/`. Inside, create a `page.tsx` file. This file will be a server component that uses a server-side Supabase client to fetch all records from the `books` table. Use Shadcn UI components like `<Card>` and `<CardContent>` to create a responsive grid layout, displaying each book's cover image, title, and author.",
+            "status": "pending",
+            "testStrategy": "Navigate to `/books` and verify that a list of books fetched from the database is displayed correctly in a grid format."
+          },
+          {
+            "id": 2,
+            "title": "Implement Server-Side Search Functionality",
+            "description": "Add a search bar to the catalog page to allow users to filter books by title or author. The search logic will be executed on the server, and the search query will be stored in the URL search parameters.",
+            "dependencies": [
+              "4.1"
+            ],
+            "details": "In `app/books/page.tsx`, add a search form with an `<Input>` component. The page component should read the search query from its `searchParams` prop. Create or update a data-fetching function (e.g., in `lib/data.ts`) to modify the Supabase query, using `.or('title.ilike.%query%,author.ilike.%query%')` to filter the results based on the provided query.",
+            "status": "pending",
+            "testStrategy": "On the `/books` page, enter a known book title or author into the search bar and submit. Verify that the list of books updates to show only the relevant results and that the URL contains the search query (e.g., `/books?query=...`)."
+          },
+          {
+            "id": 3,
+            "title": "Implement Server-Side Pagination",
+            "description": "Add pagination controls to the bottom of the catalog page to handle large numbers of books. The current page number will be managed via URL search parameters.",
+            "dependencies": [
+              "4.1"
+            ],
+            "details": "Update the data-fetching function to accept `page` and `limit` arguments and use Supabase's `.range()` method for pagination. Perform a second query to get the total count of books for calculating the total number of pages. Use the Shadcn `<Pagination>` component in `app/books/page.tsx`, passing it the necessary props. The pagination links should update the `page` parameter in the URL.",
+            "status": "pending",
+            "testStrategy": "With more books in the database than the page limit, verify that the pagination controls appear. Click on a page number and confirm that the URL updates (e.g., `/books?page=2`) and a new set of books is displayed."
+          },
+          {
+            "id": 4,
+            "title": "Create Dynamic Route for Book Detail Page",
+            "description": "Develop the individual book detail page using a dynamic route. This page will display comprehensive information about a single selected book.",
+            "dependencies": [],
+            "details": "Create a new dynamic route `app/books/[id]/page.tsx`. This server component will receive the book `id` via its `params` prop. Create a new data-fetching function, `getBookById(id)`, to retrieve a single book's complete data from Supabase. Design a two-column layout to display the book's cover image on one side and its title, author, description, and other details on the other.",
+            "status": "pending",
+            "testStrategy": "Manually navigate to a URL like `/books/some-valid-id` and verify that all details for that specific book are displayed correctly."
+          },
+          {
+            "id": 5,
+            "title": "Link Catalog Items and Handle 'Not Found' State",
+            "description": "Connect the catalog page to the detail page by making each book card a link. Also, implement a robust 'not found' state for the detail page if a book with the given ID does not exist.",
+            "dependencies": [
+              "4.1",
+              "4.4"
+            ],
+            "details": "In `app/books/page.tsx`, wrap each book card component in a Next.js `<Link>` component that navigates to `/books/${book.id}`. In `app/books/[id]/page.tsx`, check if the data returned from `getBookById(id)` is null or empty. If so, call the `notFound()` function from `next/navigation` to render the standard 404 page.",
+            "status": "pending",
+            "testStrategy": "Click on a book from the `/books` catalog page and verify it navigates to the correct detail page. Attempt to navigate to a non-existent book ID (e.g., `/books/invalid-id`) and confirm that a 404 'Not Found' page is displayed."
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Implement Admin User Management Dashboard",
+        "description": "Create an admin dashboard to view all registered users and manage their approval status.",
+        "details": "Develop an admin-only page that lists all users with their email and approval status ('Pending', 'Approved', 'Rejected'). Add buttons for admins to approve or reject new users who have verified their email. Implement search and pagination for the user list.",
+        "testStrategy": "As an admin, view the list of registered users. Test the search functionality. Approve a 'Pending' user and verify their status changes in the database and on the UI. Reject another user and confirm the status update.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "To Do",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Admin-Only API Route to Fetch Users",
+            "description": "Develop a new API route handler at `app/api/admin/users/route.ts`. This GET endpoint should fetch users from the `profiles` table. It must be protected to only allow 'ADMIN' role access. Implement pagination using `page` and `limit` query parameters, and a search feature using a `query` parameter to filter by email. The response should include the user list and total count for pagination.",
+            "dependencies": [],
+            "details": "Use the server-side Supabase client from `lib/supabase/server.ts`. Check the user's role by querying the `profiles` table for the authenticated user's ID. If the role is not 'ADMIN', return a 403 Forbidden error. Use Supabase query methods like `.ilike()` for search and `.range()` for pagination.",
+            "status": "pending",
+            "testStrategy": "Use an API client like Postman to test the endpoint. Verify that non-admin users receive a 403 error. Test the pagination and search query parameters to ensure the correct data and count are returned."
+          },
+          {
+            "id": 2,
+            "title": "Create API Routes for User Approval and Rejection",
+            "description": "Implement two new API route handlers: `app/api/admin/users/[userId]/approve/route.ts` and `app/api/admin/users/[userId]/reject/route.ts`. These PATCH endpoints will update a user's `approval_status` in the `profiles` table to 'Approved' or 'Rejected' respectively.",
+            "dependencies": [],
+            "details": "Both routes must be protected for admin-only access, similar to the user list route. The `userId` will be a dynamic parameter from the URL. Use the Supabase client to perform the `update` operation on the `profiles` table where the `id` matches `userId`.",
+            "status": "pending",
+            "testStrategy": "Using an API client, send PATCH requests to these endpoints with an admin user's token. Verify that the user's status is updated correctly in the Supabase `profiles` table. Test that requests from non-admin users fail."
+          },
+          {
+            "id": 3,
+            "title": "Create Admin Dashboard Page with Route Protection",
+            "description": "Create a new page component at `app/admin/users/page.tsx`. This page will serve as the UI for the user management dashboard. Implement route protection to ensure this page is only accessible to logged-in users with the 'ADMIN' role.",
+            "dependencies": [],
+            "details": "This will be a Next.js Server Component. In the component, use the server-side Supabase client (`createClient` from `lib/supabase/server.ts`) to fetch the current user's session and profile. If the user is not an admin, use Next.js's `redirect` function to send them to the home page.",
+            "status": "pending",
+            "testStrategy": "Log in as a non-admin user and attempt to navigate to `/admin/users`; verify you are redirected. Log in as an admin user and verify you can access the page successfully."
+          },
+          {
+            "id": 4,
+            "title": "Build User Table with Search and Pagination Controls",
+            "description": "In the `app/admin/users/page.tsx` component, create a client component (e.g., `components/admin/user-table.tsx`) to fetch and display the user data from the API created in subtask 5.1. The table should show user email and approval status. Implement a search input and pagination buttons.",
+            "dependencies": [
+              "5.1",
+              "5.3"
+            ],
+            "details": "Use `shadcn/ui` components like `Table`, `Input`, and `Button` for a consistent look. The component will manage state for the search query and current page. Use `useSearchParams` and `useRouter` to reflect the state in the URL, making the table shareable and refresh-safe. The initial data can be passed from the server component (page.tsx) to the client component.",
+            "status": "pending",
+            "testStrategy": "On the admin dashboard, verify that the user list loads and is displayed correctly. Test the search input by typing an email and confirming the list filters. Test the pagination buttons to navigate between pages of users."
+          },
+          {
+            "id": 5,
+            "title": "Implement Approve/Reject Button Logic in User Table",
+            "description": "In the user table component, add an 'Actions' column. For users with a 'Pending' status, display 'Approve' and 'Reject' buttons. Wire up these buttons to call the respective API endpoints created in subtask 5.2.",
+            "dependencies": [
+              "5.2",
+              "5.4"
+            ],
+            "details": "Create functions to handle the `onClick` events for the buttons. These functions will make `PATCH` requests to the API. After a successful request, update the UI to reflect the new status. This can be done by calling `router.refresh()` to re-fetch server component data. Use `shadcn/ui` `Button` components. Disable buttons while the request is in flight.",
+            "status": "pending",
+            "testStrategy": "Find a 'Pending' user in the list. Click 'Approve' and verify their status changes to 'Approved' in the UI and in the database. Do the same for the 'Reject' button and verify the status changes to 'Rejected'."
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Implement Book Borrowing Functionality",
+        "description": "Enable approved users to borrow available books from the book detail page.",
+        "details": "On the book detail page, add a 'Borrow' button. This button should be enabled only for logged-in, approved users and only if the book has more than 0 available copies. Clicking 'Borrow' will create a record in `borrowed_books` and decrement the `available_copies` count for the book.",
+        "testStrategy": "Log in as an unapproved user and verify the borrow button is disabled. Log in as an approved user, borrow a book, and confirm the available copy count decreases. Attempt to borrow a book with 0 copies and verify the button is disabled.",
+        "priority": "high",
+        "dependencies": [
+          4,
+          5
+        ],
+        "status": "To Do",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create a PostgreSQL function for atomic borrow transaction",
+            "description": "Create a new Supabase database migration to define a PostgreSQL function named `borrow_book`. This function will ensure that borrowing a book is an atomic operation. It should accept `book_id` and `user_id` as arguments, decrement the `available_copies` in the `books` table, and insert a new record into the `borrowed_books` table within a single transaction. The function should raise an error if no copies are available.",
+            "dependencies": [],
+            "details": "In the `supabase/migrations` directory, create a new SQL file. The function should first check if `available_copies` for the given `book_id` is greater than 0. If it is, it should update the book's count and insert into `borrowed_books`. If not, it should raise an exception. This prevents race conditions.",
+            "status": "pending",
+            "testStrategy": "Use the Supabase SQL Editor to test the function directly by calling it with valid and invalid `book_id`s (e.g., one with 0 copies) to ensure the transaction logic is correct."
+          },
+          {
+            "id": 2,
+            "title": "Implement a Server Action to handle the borrow request",
+            "description": "Create a new server action in a file like `app/actions/borrow.ts`. This action will orchestrate the borrowing process. It must authenticate the user, check their approval status, and then call the `borrow_book` RPC function created in the previous subtask. It should also handle data revalidation.",
+            "dependencies": [
+              "6.1"
+            ],
+            "details": "The action will take `bookId` as an argument. Use the server-side Supabase client to get the current user's ID and profile data. Verify the user is approved. If so, invoke the `borrow_book` RPC with the `bookId` and `userId`. The action should return a success or error state and call `revalidatePath('/books/[bookId]')` on success to refresh the UI.",
+            "status": "pending",
+            "testStrategy": "Create a temporary test page or use a tool like Postman (if exposed as an API route) to trigger the server action and verify that it correctly calls the RPC and returns the expected response."
+          },
+          {
+            "id": 3,
+            "title": "Develop the client-side `BorrowButton` component",
+            "description": "Create a new client component at `components/BorrowButton.tsx`. This component will display the 'Borrow' button and manage its state (e.g., disabled, loading). It will call the server action when clicked.",
+            "dependencies": [
+              "6.2"
+            ],
+            "details": "The component should accept props like `bookId`, `availableCopies`, and `userStatus` (an object containing login and approval status). Use the `useTransition` hook to handle the pending state while the server action is executing. The button's `disabled` attribute should be dynamically set based on the props: `!userStatus.isLoggedIn || !userStatus.isApproved || availableCopies <= 0 || isPending`.",
+            "status": "pending",
+            "testStrategy": "Use Storybook or a simple test page to render the button with different props (e.g., logged out, unapproved, 0 copies) and verify it is enabled/disabled correctly."
+          },
+          {
+            "id": 4,
+            "title": "Integrate the `BorrowButton` into the book detail page",
+            "description": "Modify the book detail page at `app/books/[bookId]/page.tsx` to fetch the current user's status and render the `BorrowButton` component with the correct props.",
+            "dependencies": [
+              "6.3"
+            ],
+            "details": "This page is a Server Component. In addition to fetching book data, fetch the current user's session and profile from Supabase to determine if they are logged in and approved. Pass the book's ID, `available_copies`, and the user's status down to the `BorrowButton` client component.",
+            "status": "pending",
+            "testStrategy": "Navigate to a book detail page as a guest, a logged-in but unapproved user, and a logged-in approved user. Verify the 'Borrow' button's visibility and enabled state in each scenario."
+          },
+          {
+            "id": 5,
+            "title": "Implement UI feedback for the borrow action",
+            "description": "Enhance the `BorrowButton` component to provide clear feedback to the user upon success or failure of the borrow action, using toast notifications.",
+            "dependencies": [
+              "6.2",
+              "6.3"
+            ],
+            "details": "Modify the server action from subtask 6.2 to return a structured object with a status and message. In the `BorrowButton` component, use a library like `react-hot-toast`. When the server action completes, inspect the returned object and display a success toast ('Book borrowed successfully!') or an error toast ('Failed to borrow book: [error message]') accordingly.",
+            "status": "pending",
+            "testStrategy": "As an approved user, click the 'Borrow' button. Verify a success toast appears and the available copies count updates. Try to borrow a book with 0 copies and verify an error toast is shown."
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Create User Profile Page with Borrowed Books",
+        "description": "Build a profile page for users to view their information and a list of the books they have currently borrowed.",
+        "details": "Create a protected route for the user profile. The page should display the user's email and a list of all books currently borrowed by that user. This involves fetching data from the `borrowed_books` table joined with the `books` table.",
+        "testStrategy": "Log in as a user who has borrowed books and verify the list appears correctly on their profile. Log in as a user with no borrowed books and confirm an empty state is shown. Check that book details (title, author) are correct.",
+        "priority": "medium",
+        "dependencies": [
+          6
+        ],
+        "status": "To Do",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Server Action to Fetch User's Borrowed Books",
+            "description": "Create a new server action that retrieves all books currently borrowed by the logged-in user. This action will query the Supabase database, joining the 'borrowed_books' and 'books' tables.",
+            "dependencies": [],
+            "details": "In the `lib/actions/` directory, create a new file `user.actions.ts`. Inside this file, define an async function `getBorrowedBooks`. This function should first get the current user's session using the server Supabase client (from `lib/supabase/server.ts`). If a user exists, query the `borrowed_books` table, filtering by the `user_id`. The query must join with the `books` table to include details like title, author, and cover image. The function should return the list of joined book data.",
+            "status": "pending",
+            "testStrategy": "Manually call the action from a test page or server component and log the output to verify it returns the correct book data for a logged-in user who has borrowed books."
+          },
+          {
+            "id": 2,
+            "title": "Create the Basic Protected Profile Page Route",
+            "description": "Set up the file and basic component for the user profile page at the `/profile` route. This page should be a server component that fetches and displays the current user's email.",
+            "dependencies": [],
+            "details": "Create a new file at `app/profile/page.tsx`. This will be an `async` server component. Use the existing `getCurrentUser` server action (or create one if it doesn't exist, similar to what's used in the Header) to fetch the user's data. The component should display the user's email. The route is already protected by the existing `middleware.ts`, which redirects unauthenticated users from `/profile` to `/login`.",
+            "status": "pending",
+            "testStrategy": "Navigate to `/profile` while logged out and verify you are redirected to `/login`. Log in and navigate to `/profile` to confirm your email is displayed."
+          },
+          {
+            "id": 3,
+            "title": "Develop a UI Component for a Single Borrowed Book",
+            "description": "Create a reusable React component to display the details of a single borrowed book in a card format.",
+            "dependencies": [],
+            "details": "Create a new component file, for example, `components/cards/BorrowedBookCard.tsx`. This component should accept props for book details (e.g., `title`, `author`, `cover_image_url`). Use existing Shadcn UI components like `<Card>`, `<CardHeader>`, `<CardTitle>`, and `<CardContent>` to structure the display. Include an `<img>` tag for the book's cover.",
+            "status": "pending",
+            "testStrategy": "Use Storybook or a temporary page to render this component with mock data to ensure it displays correctly."
+          },
+          {
+            "id": 4,
+            "title": "Integrate Data and Display Borrowed Books on Profile Page",
+            "description": "On the profile page, call the server action to get the borrowed books and render them using the `BorrowedBookCard` component. Handle the case where the user has no borrowed books.",
+            "dependencies": [
+              "7.1",
+              "7.2",
+              "7.3"
+            ],
+            "details": "In `app/profile/page.tsx`, import and call the `getBorrowedBooks` server action created in subtask 1. Map over the returned array of books and render a `BorrowedBookCard` for each item. If the array is empty, display a message such as 'You have no books currently borrowed.' Wrap the list in a container and add a heading like 'My Borrowed Books'.",
+            "status": "pending",
+            "testStrategy": "Log in as a user with borrowed books and verify the list appears correctly. Log in as a user with no borrowed books and confirm the empty state message is shown."
+          },
+          {
+            "id": 5,
+            "title": "Add Navigation Link to Profile Page in Header",
+            "description": "Add a link to the new `/profile` page in the main application header, ensuring it is only visible to authenticated users.",
+            "dependencies": [
+              "7.2"
+            ],
+            "details": "Locate and edit the main navigation component, likely `components/shared/Header.tsx`. This component already fetches the user session to conditionally render links. Within the block that checks if a user is logged in, add a new Next.js `<Link>` component that navigates to `/profile` with the text 'Profile'.",
+            "status": "pending",
+            "testStrategy": "Verify that the 'Profile' link is not visible when logged out. Log in and confirm the 'Profile' link appears in the header and successfully navigates to the user profile page."
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Implement Book Return Functionality",
+        "description": "Allow users to return a borrowed book from their profile page, making the copy available again.",
+        "details": "On the user profile page, add a 'Return' button next to each borrowed book. When clicked, this should update the `returned_at` field in the `borrowed_books` table and increment the `available_copies` count in the `books` table.",
+        "testStrategy": "As a user, return a book from the profile page. Verify the book is removed from the 'currently borrowed' list. Check the public catalog page for that book and confirm its `available_copies` count has increased by one.",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "status": "To Do",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create a PostgreSQL Function for Transactional Book Returns",
+            "description": "Write and deploy a SQL function in the Supabase SQL Editor to handle the book return process as a single atomic transaction. This ensures data integrity between the `books` and `borrowed_books` tables.",
+            "dependencies": [],
+            "details": "Create a PostgreSQL function named `handle_book_return` that accepts `borrow_id_to_return` (UUID) and `book_id_to_update` (UUID) as arguments. The function must first verify that the borrow record exists and has not already been returned. Then, it should update the `returned_at` field to the current timestamp for the specified record in `borrowed_books` and increment the `available_copies` field by 1 for the corresponding book in the `books` table.",
+            "status": "pending",
+            "testStrategy": "Execute the function directly in the Supabase SQL Editor with valid and invalid IDs to ensure it updates both tables correctly and handles edge cases like already-returned books."
+          },
+          {
+            "id": 2,
+            "title": "Implement the `returnBook` Server Action",
+            "description": "Create a Next.js server action that securely calls the database function to process a book return and handles data revalidation.",
+            "dependencies": [
+              "8.1"
+            ],
+            "details": "In a relevant actions file (e.g., `lib/actions/books.ts`), define an async function `returnBook`. This action should: 1. Get the authenticated user's session. 2. Verify the user is the one who borrowed the book. 3. Call the `handle_book_return` PostgreSQL function using Supabase's `rpc()` client, passing the `borrowId` and `bookId`. 4. Upon successful execution, call `revalidatePath('/profile')` and `revalidatePath('/books/[id]')` to refresh the user's profile and the book's detail page.",
+            "status": "pending",
+            "testStrategy": "Create a test script or temporarily call this action from a test page to ensure it correctly invokes the RPC and triggers revalidation."
+          },
+          {
+            "id": 3,
+            "title": "Add 'Return' Button to Borrowed Books List on Profile Page",
+            "description": "Modify the user profile page UI to display a 'Return' button next to each book that is currently borrowed.",
+            "dependencies": [],
+            "details": "In the component responsible for rendering the list of borrowed books on `app/profile/page.tsx`, iterate through the books. For each book where `returned_at` is `null`, render a `<form>` containing a 'Return' button. The form should include hidden input fields for `borrowId` and `bookId` to pass the necessary data to the server action.",
+            "status": "pending",
+            "testStrategy": "Log in as a user who has borrowed books. Navigate to the profile page and verify that a 'Return' button appears only for books that haven't been returned."
+          },
+          {
+            "id": 4,
+            "title": "Connect UI Button to Server Action with Pending State",
+            "description": "Wire up the 'Return' button's form to the `returnBook` server action and implement a pending UI state to give the user immediate feedback.",
+            "dependencies": [
+              "8.2",
+              "8.3"
+            ],
+            "details": "Bind the `returnBook` server action to the `action` prop of the form. Create a client component for the button (e.g., `ReturnButton.tsx`) that uses the `useFormStatus` hook. The button should display a loading spinner or text (e.g., 'Returning...') and be disabled while `pending` is true to prevent multiple submissions.",
+            "status": "pending",
+            "testStrategy": "Click the 'Return' button and verify it enters a disabled/loading state until the server action completes."
+          },
+          {
+            "id": 5,
+            "title": "Implement User Feedback and Error Handling",
+            "description": "Provide clear success or error feedback to the user after they attempt to return a book.",
+            "dependencies": [
+              "8.4"
+            ],
+            "details": "Modify the `returnBook` server action to return a state object (e.g., `{ success: true }` or `{ error: '...' }`). On the profile page, use the `useFormState` hook to manage the form's state. Based on the returned state, display a toast notification (e.g., using `sonner`) to inform the user if the return was successful or if an error occurred. The successful revalidation will automatically remove the book from the list.",
+            "status": "pending",
+            "testStrategy": "Successfully return a book and verify a success toast appears. Manually introduce an error in the server action (e.g., by passing an invalid ID) and confirm that an appropriate error message is displayed to the user without crashing the page."
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Build Admin Dashboard for Borrowing Activity",
+        "description": "Create a centralized view for admins to monitor all currently borrowed books across the platform.",
+        "details": "Develop an admin-only page that lists all active borrowing records (where `returned_at` is null). The table should include book title, borrower's email, and borrow date. Implement search and pagination for this view.",
+        "testStrategy": "As an admin, access the dashboard and verify it shows all books currently on loan. Test the search and pagination. Cross-reference the data with user profiles to ensure accuracy and completeness.",
+        "priority": "low",
+        "dependencies": [
+          6
+        ],
+        "status": "To Do",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Server-Side Function to Fetch Active Borrowing Records",
+            "description": "Develop a server-side function to query the Supabase database for all active borrowing records. The function should join `borrowed_books` with the `books` and `users` tables to retrieve the book title and borrower's email. It must filter for records where `returned_at` is null.",
+            "dependencies": [],
+            "details": "Create a new file, e.g., `lib/data/borrowing.ts`. The function should accept arguments for search query (to filter by book title or user email), current page, and items per page. It needs to return both the paginated list of borrowing records and the total count of matching records for the pagination component.",
+            "status": "pending",
+            "testStrategy": "Write a test script or manually call the function with different parameters (search query, page number) to ensure it returns the correct data structure, joins tables correctly, and handles pagination logic as expected."
+          },
+          {
+            "id": 2,
+            "title": "Set Up Admin Borrowing Page and Basic Data Table",
+            "description": "Create the new page for the admin borrowing dashboard at `app/admin/borrowing/page.tsx`. This page will call the data-fetching function from the previous subtask and display the results in a basic table.",
+            "dependencies": [
+              "9.1"
+            ],
+            "details": "This page should be a server component that reads search parameters from the URL. Use the Shadcn UI `<Table>` component to structure the data. The initial table should display columns for 'Book Title', 'Borrower Email', and 'Borrow Date'. Ensure the admin layout is applied to this new page for consistent styling and navigation.",
+            "status": "pending",
+            "testStrategy": "Navigate to `/admin/borrowing` as an admin. Verify the page loads and the table is populated with the correct data for currently borrowed books from the database."
+          },
+          {
+            "id": 3,
+            "title": "Implement Search Functionality on the Dashboard",
+            "description": "Add a search input field to the borrowing dashboard that allows admins to filter the list of borrowed books by book title or borrower's email.",
+            "dependencies": [
+              "9.2"
+            ],
+            "details": "Following the pattern likely used in the User Management dashboard (Task 5), create a client component for the search input. Use the `useSearchParams` and `useRouter` hooks to update the URL with the search query as the user types (with debouncing). The `app/admin/borrowing/page.tsx` server component will read this query from its `searchParams` prop and pass it to the data-fetching function.",
+            "status": "pending",
+            "testStrategy": "On the dashboard, type a known book title or user email into the search box. Verify that the table updates in real-time to show only the matching borrowing records."
+          },
+          {
+            "id": 4,
+            "title": "Implement Pagination for the Borrowing Records Table",
+            "description": "Add a pagination component to the bottom of the borrowing records table to handle large datasets.",
+            "dependencies": [
+              "9.2"
+            ],
+            "details": "Utilize the existing Shadcn UI `<Pagination>` component, similar to its implementation in the User Management or Public Catalog pages. The component should be driven by the total record count returned by the data-fetching function. Clicking on a page number should update the `page` URL search parameter, triggering the server component to refetch the correct data slice.",
+            "status": "pending",
+            "testStrategy": "Seed the database with enough borrowing records to span multiple pages. Navigate through the pages using the pagination controls and verify that the correct set of records is displayed for each page."
+          },
+          {
+            "id": 5,
+            "title": "Secure the Borrowing Dashboard for Admin Access Only",
+            "description": "Implement an authorization check to ensure that only users with an 'admin' role can access the `/admin/borrowing` page.",
+            "dependencies": [
+              "9.2"
+            ],
+            "details": "In the `app/admin/borrowing/page.tsx` component (or a shared `app/admin/layout.tsx`), fetch the current user's session and profile data from Supabase. Check if the user's role is 'admin'. If the user is not an admin, redirect them to a different page, such as the homepage or a 'not authorized' page.",
+            "status": "pending",
+            "testStrategy": "Attempt to access `/admin/borrowing` while logged in as a non-admin user and verify you are redirected. Log in as an admin and confirm you can access the page successfully."
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "UI/UX Refinement and End-to-End Testing",
+        "description": "Polish the user interface for a clean, responsive design and conduct end-to-end testing of all key user flows.",
+        "details": "Review all pages for consistent styling, responsiveness, and accessibility using Shadcn and Tailwind CSS. Manually test the three key user flows: New User Registration, Book Borrowing, and Admin Book Management from start to finish to catch any integration issues.",
+        "testStrategy": "Perform manual testing on different screen sizes (desktop, tablet, mobile). Execute the key user flows without errors. Check the browser console for any warnings or errors. Ensure the final application feels polished and intuitive.",
+        "priority": "medium",
+        "dependencies": [
+          8,
+          9
+        ],
+        "status": "To Do",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Review and Standardize Global UI Components and Layout",
+            "description": "Audit and refine the main application layout, header, navigation, and footer. Ensure consistent use of typography, spacing, and color schemes as defined by the Tailwind CSS configuration. Standardize the look and feel of core shadcn/ui components (Button, Card, Input) used across the application.",
+            "dependencies": [],
+            "details": "Examine `src/app/(main)/layout.tsx`, `src/components/header.tsx`, and `src/app/layout.tsx`. Check for consistent branding and navigation across all pages. Ensure the main layout is responsive on mobile, tablet, and desktop viewports. Create a consistent responsive behavior for the main navigation menu.",
+            "status": "pending",
+            "testStrategy": "Visually inspect the application shell on different screen sizes. Verify that navigation links are easily clickable on mobile. Check the browser console for any CSS or layout-related errors."
+          },
+          {
+            "id": 2,
+            "title": "Refine UI/UX for Public and User-Facing Pages",
+            "description": "Polish the UI for all public-facing pages, including the book catalog, book detail pages, and the authenticated user's 'My Books' dashboard. Focus on readability, intuitive navigation, and responsive design.",
+            "dependencies": [
+              "10.1"
+            ],
+            "details": "Review `src/app/(main)/books/page.tsx`, `src/app/(main)/books/[bookId]/page.tsx`, and `src/app/(main)/my-books/page.tsx`. Ensure the book catalog's grid layout (`src/components/book-card.tsx`) adapts gracefully to smaller screens. Check that the book detail page presents information clearly and the 'Borrow' button is prominent. The 'My Books' table should be responsive.",
+            "status": "pending",
+            "testStrategy": "Test the book catalog search and pagination on a mobile device. Verify that all book details are readable and well-formatted on various screen sizes. Ensure the user dashboard is usable on a small screen."
+          },
+          {
+            "id": 3,
+            "title": "Polish Admin Interface for Responsiveness and Usability",
+            "description": "Review and improve the UI/UX of all admin-only pages, including the book management table, add/edit book forms, and the borrowing activity dashboard. Ensure tables and forms are fully functional and easy to use on smaller screens.",
+            "dependencies": [
+              "10.1"
+            ],
+            "details": "Focus on `src/app/(main)/admin/books/page.tsx`, `src/components/books-table.tsx`, `src/components/book-form.tsx`, and `src/app/(main)/admin/dashboard/page.tsx`. Implement horizontal scrolling or a card-based layout for tables on mobile. Ensure form fields in `book-form.tsx` are well-spaced and usable on touch devices.",
+            "status": "pending",
+            "testStrategy": "As an admin, attempt to create, edit, and delete a book using a mobile viewport. Verify that all table data in the admin dashboard is accessible, even if it requires horizontal scrolling. Check that form validation messages are displayed correctly on all screen sizes."
+          },
+          {
+            "id": 4,
+            "title": "End-to-End Test: New User Registration and Book Borrowing Flow",
+            "description": "Perform a complete manual end-to-end test of the new user registration and book borrowing user journey. This test simulates the entire lifecycle of a new user wanting to borrow a book.",
+            "dependencies": [
+              "10.2"
+            ],
+            "details": "Execute the following steps: 1. Navigate to the signup page and create a new user account. 2. Check for the verification email and click the link. 3. Log in with the new credentials. 4. Browse the book catalog and select a book. 5. From the book detail page, click the 'Borrow' button. 6. Navigate to the 'My Books' page and verify the borrowed book is listed.",
+            "status": "pending",
+            "testStrategy": "Perform this test flow on both desktop and mobile viewports. Check the browser's developer console for any errors or warnings during the process. Ensure all UI feedback (toasts, loading states) works as expected."
+          },
+          {
+            "id": 5,
+            "title": "End-to-End Test: Admin Book Management and Dashboard Flow",
+            "description": "Perform a complete manual end-to-end test of the admin book management (CRUD) and dashboard verification flow. This ensures an admin can manage the library catalog and monitor activity.",
+            "dependencies": [
+              "10.3"
+            ],
+            "details": "Execute the following steps: 1. Log in as an admin user. 2. Navigate to the admin book management page. 3. Create a new book with a cover image. 4. Verify the new book appears in the list. 5. Edit the details of the newly created book and save. 6. Verify the changes are reflected. 7. Delete the book and confirm its removal. 8. Navigate to the admin dashboard to check borrowing activity.",
+            "status": "pending",
+            "testStrategy": "Perform this test flow on both desktop and mobile viewports. Confirm that actions like image uploads and deletions work correctly. Cross-reference the borrowing dashboard with actions performed by a regular user account to ensure data consistency."
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-09-03T15:24:06.858Z",
+      "updated": "2025-09-03T15:24:06.858Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

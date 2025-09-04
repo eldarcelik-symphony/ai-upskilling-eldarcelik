@@ -1,0 +1,43 @@
+# Task ID: 6
+# Title: Implement Book Borrowing Functionality
+# Status: To Do
+# Dependencies: 4, 5
+# Priority: high
+# Description: Enable approved users to borrow available books from the book detail page.
+# Details:
+On the book detail page, add a 'Borrow' button. This button should be enabled only for logged-in, approved users and only if the book has more than 0 available copies. Clicking 'Borrow' will create a record in `borrowed_books` and decrement the `available_copies` count for the book.
+
+# Test Strategy:
+Log in as an unapproved user and verify the borrow button is disabled. Log in as an approved user, borrow a book, and confirm the available copy count decreases. Attempt to borrow a book with 0 copies and verify the button is disabled.
+
+# Subtasks:
+## 1. Create a PostgreSQL function for atomic borrow transaction [pending]
+### Dependencies: None
+### Description: Create a new Supabase database migration to define a PostgreSQL function named `borrow_book`. This function will ensure that borrowing a book is an atomic operation. It should accept `book_id` and `user_id` as arguments, decrement the `available_copies` in the `books` table, and insert a new record into the `borrowed_books` table within a single transaction. The function should raise an error if no copies are available.
+### Details:
+In the `supabase/migrations` directory, create a new SQL file. The function should first check if `available_copies` for the given `book_id` is greater than 0. If it is, it should update the book's count and insert into `borrowed_books`. If not, it should raise an exception. This prevents race conditions.
+
+## 2. Implement a Server Action to handle the borrow request [pending]
+### Dependencies: 6.1
+### Description: Create a new server action in a file like `app/actions/borrow.ts`. This action will orchestrate the borrowing process. It must authenticate the user, check their approval status, and then call the `borrow_book` RPC function created in the previous subtask. It should also handle data revalidation.
+### Details:
+The action will take `bookId` as an argument. Use the server-side Supabase client to get the current user's ID and profile data. Verify the user is approved. If so, invoke the `borrow_book` RPC with the `bookId` and `userId`. The action should return a success or error state and call `revalidatePath('/books/[bookId]')` on success to refresh the UI.
+
+## 3. Develop the client-side `BorrowButton` component [pending]
+### Dependencies: 6.2
+### Description: Create a new client component at `components/BorrowButton.tsx`. This component will display the 'Borrow' button and manage its state (e.g., disabled, loading). It will call the server action when clicked.
+### Details:
+The component should accept props like `bookId`, `availableCopies`, and `userStatus` (an object containing login and approval status). Use the `useTransition` hook to handle the pending state while the server action is executing. The button's `disabled` attribute should be dynamically set based on the props: `!userStatus.isLoggedIn || !userStatus.isApproved || availableCopies <= 0 || isPending`.
+
+## 4. Integrate the `BorrowButton` into the book detail page [pending]
+### Dependencies: 6.3
+### Description: Modify the book detail page at `app/books/[bookId]/page.tsx` to fetch the current user's status and render the `BorrowButton` component with the correct props.
+### Details:
+This page is a Server Component. In addition to fetching book data, fetch the current user's session and profile from Supabase to determine if they are logged in and approved. Pass the book's ID, `available_copies`, and the user's status down to the `BorrowButton` client component.
+
+## 5. Implement UI feedback for the borrow action [pending]
+### Dependencies: 6.2, 6.3
+### Description: Enhance the `BorrowButton` component to provide clear feedback to the user upon success or failure of the borrow action, using toast notifications.
+### Details:
+Modify the server action from subtask 6.2 to return a structured object with a status and message. In the `BorrowButton` component, use a library like `react-hot-toast`. When the server action completes, inspect the returned object and display a success toast ('Book borrowed successfully!') or an error toast ('Failed to borrow book: [error message]') accordingly.
+

@@ -1,0 +1,43 @@
+# Task ID: 5
+# Title: Implement Admin User Management Dashboard
+# Status: To Do
+# Dependencies: 2
+# Priority: high
+# Description: Create an admin dashboard to view all registered users and manage their approval status.
+# Details:
+Develop an admin-only page that lists all users with their email and approval status ('Pending', 'Approved', 'Rejected'). Add buttons for admins to approve or reject new users who have verified their email. Implement search and pagination for the user list.
+
+# Test Strategy:
+As an admin, view the list of registered users. Test the search functionality. Approve a 'Pending' user and verify their status changes in the database and on the UI. Reject another user and confirm the status update.
+
+# Subtasks:
+## 1. Create Admin-Only API Route to Fetch Users [pending]
+### Dependencies: None
+### Description: Develop a new API route handler at `app/api/admin/users/route.ts`. This GET endpoint should fetch users from the `profiles` table. It must be protected to only allow 'ADMIN' role access. Implement pagination using `page` and `limit` query parameters, and a search feature using a `query` parameter to filter by email. The response should include the user list and total count for pagination.
+### Details:
+Use the server-side Supabase client from `lib/supabase/server.ts`. Check the user's role by querying the `profiles` table for the authenticated user's ID. If the role is not 'ADMIN', return a 403 Forbidden error. Use Supabase query methods like `.ilike()` for search and `.range()` for pagination.
+
+## 2. Create API Routes for User Approval and Rejection [pending]
+### Dependencies: None
+### Description: Implement two new API route handlers: `app/api/admin/users/[userId]/approve/route.ts` and `app/api/admin/users/[userId]/reject/route.ts`. These PATCH endpoints will update a user's `approval_status` in the `profiles` table to 'Approved' or 'Rejected' respectively.
+### Details:
+Both routes must be protected for admin-only access, similar to the user list route. The `userId` will be a dynamic parameter from the URL. Use the Supabase client to perform the `update` operation on the `profiles` table where the `id` matches `userId`.
+
+## 3. Create Admin Dashboard Page with Route Protection [pending]
+### Dependencies: None
+### Description: Create a new page component at `app/admin/users/page.tsx`. This page will serve as the UI for the user management dashboard. Implement route protection to ensure this page is only accessible to logged-in users with the 'ADMIN' role.
+### Details:
+This will be a Next.js Server Component. In the component, use the server-side Supabase client (`createClient` from `lib/supabase/server.ts`) to fetch the current user's session and profile. If the user is not an admin, use Next.js's `redirect` function to send them to the home page.
+
+## 4. Build User Table with Search and Pagination Controls [pending]
+### Dependencies: 5.1, 5.3
+### Description: In the `app/admin/users/page.tsx` component, create a client component (e.g., `components/admin/user-table.tsx`) to fetch and display the user data from the API created in subtask 5.1. The table should show user email and approval status. Implement a search input and pagination buttons.
+### Details:
+Use `shadcn/ui` components like `Table`, `Input`, and `Button` for a consistent look. The component will manage state for the search query and current page. Use `useSearchParams` and `useRouter` to reflect the state in the URL, making the table shareable and refresh-safe. The initial data can be passed from the server component (page.tsx) to the client component.
+
+## 5. Implement Approve/Reject Button Logic in User Table [pending]
+### Dependencies: 5.2, 5.4
+### Description: In the user table component, add an 'Actions' column. For users with a 'Pending' status, display 'Approve' and 'Reject' buttons. Wire up these buttons to call the respective API endpoints created in subtask 5.2.
+### Details:
+Create functions to handle the `onClick` events for the buttons. These functions will make `PATCH` requests to the API. After a successful request, update the UI to reflect the new status. This can be done by calling `router.refresh()` to re-fetch server component data. Use `shadcn/ui` `Button` components. Disable buttons while the request is in flight.
+

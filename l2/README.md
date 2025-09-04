@@ -50,15 +50,16 @@ Start Date: 25. Aug 2025. | Target Completion: 20. Oct 2025.
 - Week 2:
   - Rules provide persistent, reusable context at the prompt level. They are included at the start of the model context. This gives the AI consistent guidance for generating code, interpreting edits, or helping with workflows.
   - Agent can directly create memories using tool calls when you explicitly ask it to remember something or when it notices important information that should be preserved for future sessions. We can create `memory.md` file in `.cursor` folder to have persistent memory and use it in the context.
+  - Task Master AI is an AI-powered project and task management system designed to automate and streamline complex software development projects by breaking down large prompts into structured, manageable tasks. It can automatically create Project Requirements Documents (PRDs) to generate a detailed task list with priorities and dependencies.
 
 ## Week 3-4: Capstone Project
 
 ### Project Overview
 
-- **Name:** [Project name]
-- **Description:** [2-3 sentences]
-- **Tech Stack:** [Languages/frameworks]
-- **AI Tools Used:** [List tools and how]
+- **Name:** Book Rental Library
+- **Description:** This project is a app with two roles: admin and user. Admins can manage users (approval system), books (add, edit, delete), and borrowed books, all with search and pagination features. Users can browse and borrow books (if approved), view book details, and manage their profile along with their borrowed history, with authentication and authorization implemented for role-based access.
+- **Tech Stack:** Next.js, React, Shadcn UI, Tailwind, Resend, Supabase
+- **AI Tools Used:** Cursor, Task Master AI
 
 ### Productivity Metrics
 

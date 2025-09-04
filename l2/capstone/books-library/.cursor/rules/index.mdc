@@ -1,0 +1,72 @@
+---
+description: Index of all cursor rules and their purposes
+globs: **/*
+alwaysApply: true
+---
+
+# Cursor Rules Index
+
+This document provides an overview of all cursor rules and their integration points.
+
+## Core Rules
+
+### [session_init.mdc](mdc:.cursor/rules/session_init.mdc)
+
+- **Purpose**: Mandatory session initialization workflow
+- **Scope**: All sessions
+- **Key Areas**: Memory check, task status, workflow enforcement
+
+### [coding_rules.mdc](mdc:.cursor/rules/coding_rules.mdc)
+
+- **Purpose**: General coding standards, AI behavior, and development practices
+- **Scope**: All code files
+- **Key Areas**: Code quality, component architecture, memory management, debugging
+
+### [cursor_rules.mdc](mdc:.cursor/rules/cursor_rules.mdc)
+
+- **Purpose**: Guidelines for creating and maintaining cursor rules
+- **Scope**: `.cursor/rules/*.mdc` files
+- **Key Areas**: Rule formatting, structure, cross-references
+
+### [self_improve.mdc](mdc:.cursor/rules/self_improve.mdc)
+
+- **Purpose**: Continuous improvement of cursor rules based on code patterns
+- **Scope**: All files
+- **Key Areas**: Pattern recognition, rule updates, quality checks
+
+## Project Management Rules
+
+### [taskmaster/dev_workflow.mdc](mdc:.cursor/rules/taskmaster/dev_workflow.mdc)
+
+- **Purpose**: Task-driven development workflow using Taskmaster
+- **Scope**: All files
+- **Key Areas**: Task management, implementation patterns, workflow transitions
+
+### [taskmaster/taskmaster.mdc](mdc:.cursor/rules/taskmaster/taskmaster.mdc)
+
+- **Purpose**: Comprehensive reference for Taskmaster tools and commands
+- **Scope**: All files
+- **Key Areas**: MCP tools, CLI commands, task operations
+
+## Project Memory
+
+### [memory.md](mdc:.cursor/memory.md)
+
+- **Purpose**: Project-specific context and knowledge storage
+- **Scope**: Project-wide
+- **Key Areas**: Tech stack, architecture decisions, requirements, notes
+
+## Rule Integration Flow
+
+1. **Start with memory**: Check [memory.md](mdc:.cursor/memory.md) for project context
+2. **Apply coding standards**: Follow [coding_rules.mdc](mdc:.cursor/rules/coding_rules.mdc)
+3. **Use task management**: Apply [dev_workflow.mdc](mdc:.cursor/rules/taskmaster/dev_workflow.mdc) patterns
+4. **Improve continuously**: Use [self_improve.mdc](mdc:.cursor/rules/self_improve.mdc) for rule updates
+5. **Maintain consistency**: Follow [cursor_rules.mdc](mdc:.cursor/rules/cursor_rules.mdc) formatting
+
+## Quick Reference
+
+- **For new code**: [coding_rules.mdc](mdc:.cursor/rules/coding_rules.mdc) + [memory.md](mdc:.cursor/memory.md)
+- **For task management**: [dev_workflow.mdc](mdc:.cursor/rules/taskmaster/dev_workflow.mdc) + [taskmaster.mdc](mdc:.cursor/rules/taskmaster/taskmaster.mdc)
+- **For rule updates**: [self_improve.mdc](mdc:.cursor/rules/self_improve.mdc) + [cursor_rules.mdc](mdc:.cursor/rules/cursor_rules.mdc)
+- **For project context**: [memory.md](mdc:.cursor/memory.md)

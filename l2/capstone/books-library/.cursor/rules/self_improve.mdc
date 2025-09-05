@@ -85,4 +85,4 @@ alwaysApply: true
   - Update project context when architecture changes
   - Document coding standards evolution in memory
 
-Follow [cursor_rules.mdc](mdc:.cursor/rules/cursor_rules.mdc) for proper rule formatting and structure.
+Follow [coding_rules.mdc](mdc:.cursor/rules/coding_rules.mdc) for proper rule formatting and structure.

@@ -66,23 +66,17 @@ alwaysApply: true
 
 # MEMORY MANAGEMENT
 
-## Memory Access (MANDATORY)
+## Memory Access
 
-- **ALWAYS start with "Remembering..."** and read what you stored in memory before working on a task
-- **ALWAYS reference knowledge as "memory"**
-- **ALWAYS refer to [memory.md](mdc:.cursor/memory.md)** for project context
-- **ALWAYS use [dev_workflow.mdc](mdc:.cursor/rules/taskmaster/dev_workflow.mdc)** for task management patterns
-- **NEVER start coding** without checking memory first
+- **Start with "Remembering..."** and read [memory.md](mdc:.cursor/memory.md) for project context
+- Reference stored knowledge as "memory"
+- Check memory before starting new tasks
 
 ## Memory Storage
 
 - Update [memory.md](mdc:.cursor/memory.md) with project specifications and requirements
-- Store anything that may be helpful for future reference
-- When tasks are completed:
-  1. Create/update entities
-  2. Define relationships
-  3. Store observations
-- Follow [self_improve.mdc](mdc:.cursor/rules/self_improve.mdc) for continuous rule improvement
+- Store patterns, decisions, and learnings for future reference
+- When tasks are completed: create/update entities, define relationships, store observations
 
 # DEBUGGING & MAINTENANCE
 
@@ -92,17 +86,34 @@ alwaysApply: true
 - Use assertions to validate assumptions
 - Consider version compatibility
 
-# RULE INTEGRATION
+# RULE MAINTENANCE
 
-## Cross-Reference Other Rules
+## Rule Structure
 
-- Follow [cursor_rules.mdc](mdc:.cursor/rules/cursor_rules.mdc) for proper rule formatting
-- Use [self_improve.mdc](mdc:.cursor/rules/self_improve.mdc) for continuous rule improvement
-- Apply [dev_workflow.mdc](mdc:.cursor/rules/taskmaster/dev_workflow.mdc) for task management
-- Reference [taskmaster.mdc](mdc:.cursor/rules/taskmaster/taskmaster.mdc) for tool usage
+- **Required Format:**
+  ```markdown
+  ---
+  description: Clear, one-line description of what the rule enforces
+  globs: path/to/files/*.ext, other/path/**/*
+  alwaysApply: boolean
+  ---
+  ```
 
-## Memory Integration
+## File References
 
-- Always check [memory.md](mdc:.cursor/memory.md) before starting new tasks
-- Update memory with new patterns, decisions, and learnings
-- Use memory to maintain project context across sessions
+- Use `[filename](mdc:path/to/file)` to reference files
+- Example: [memory.md](mdc:.cursor/memory.md) for project context
+- Example: [schema.prisma](mdc:prisma/schema.prisma) for code references
+
+## Code Examples
+
+- Use language-specific code blocks
+- Show both DO and DON'T examples
+- Reference actual code over theoretical examples
+
+## Rule Updates
+
+- Update rules when new patterns emerge
+- Add examples from actual codebase
+- Remove outdated patterns
+- Keep rules DRY and focused

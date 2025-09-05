@@ -33,7 +33,7 @@ Create a new component file, for example, `components/cards/BorrowedBookCard.tsx
 ### Dependencies: 7.1, 7.2, 7.3
 ### Description: On the profile page, call the server action to get the borrowed books and render them using the `BorrowedBookCard` component. Handle the case where the user has no borrowed books.
 ### Details:
-In `app/profile/page.tsx`, import and call the `getBorrowedBooks` server action created in subtask 1. Map over the returned array of books and render a `BorrowedBookCard` for each item. If the array is empty, display a message such as 'You have no books currently borrowed.' Wrap the list in a container and add a heading like 'My Borrowed Books'.
+In `app/profile/page.tsx`, import and call the `getBorrowedBooks` server action created in subtask 1. Also fetch the user's approval status from their profile. Map over the returned array of books and render a `BorrowedBookCard` for each item. If the array is empty, display a message such as 'You have no books currently borrowed.' Display the user's approval status prominently at the top of the profile page (e.g., 'Status: Pending Approval', 'Status: Approved', 'Status: Rejected'). Wrap the list in a container and add a heading like 'My Borrowed Books'.
 
 ## 5. Add Navigation Link to Profile Page in Header [pending]
 ### Dependencies: 7.2

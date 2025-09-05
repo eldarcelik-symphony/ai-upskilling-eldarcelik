@@ -15,13 +15,13 @@ Verify the catalog page loads and displays books from the database. Test the sea
 ### Dependencies: None
 ### Description: Set up the main public-facing book catalog page at the `/books` route. This page will be a server component that fetches and displays a grid of all available books from the database.
 ### Details:
-Create a new route directory `app/books/`. Inside, create a `page.tsx` file. This file will be a server component that uses a server-side Supabase client to fetch all records from the `books` table. Use Shadcn UI components like `<Card>` and `<CardContent>` to create a responsive grid layout, displaying each book's cover image, title, and author.
+Create a new route directory `app/books/`. Inside, create a `page.tsx` file. This file will be a server component that uses a server-side Supabase client to fetch all records from the `books` table where `is_active = true`. Use Shadcn UI components like `<Card>` and `<CardContent>` to create a responsive grid layout, displaying each book's cover image, title, author, and category.
 
 ## 2. Implement Server-Side Search Functionality [pending]
 ### Dependencies: 4.1
 ### Description: Add a search bar to the catalog page to allow users to filter books by title or author. The search logic will be executed on the server, and the search query will be stored in the URL search parameters.
 ### Details:
-In `app/books/page.tsx`, add a search form with an `<Input>` component. The page component should read the search query from its `searchParams` prop. Create or update a data-fetching function (e.g., in `lib/data.ts`) to modify the Supabase query, using `.or('title.ilike.%query%,author.ilike.%query%')` to filter the results based on the provided query.
+In `app/books/page.tsx`, add a search form with an `<Input>` component. The page component should read the search query from its `searchParams` prop. Create or update a data-fetching function (e.g., in `lib/data.ts`) to modify the Supabase query, using `.or('title.ilike.%query%,author.ilike.%query%,category.ilike.%query%')` to filter the results based on the provided query. Also add a category filter dropdown.
 
 ## 3. Implement Server-Side Pagination [pending]
 ### Dependencies: 4.1

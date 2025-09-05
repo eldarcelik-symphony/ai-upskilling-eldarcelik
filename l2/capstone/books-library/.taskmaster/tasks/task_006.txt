@@ -27,7 +27,7 @@ The action will take `bookId` as an argument. Use the server-side Supabase clien
 ### Dependencies: 6.2
 ### Description: Create a new client component at `components/BorrowButton.tsx`. This component will display the 'Borrow' button and manage its state (e.g., disabled, loading). It will call the server action when clicked.
 ### Details:
-The component should accept props like `bookId`, `availableCopies`, and `userStatus` (an object containing login and approval status). Use the `useTransition` hook to handle the pending state while the server action is executing. The button's `disabled` attribute should be dynamically set based on the props: `!userStatus.isLoggedIn || !userStatus.isApproved || availableCopies <= 0 || isPending`.
+The component should accept props like `bookId`, `availableCopies`, and `userStatus` (an object containing login and approval status). Use the `useTransition` hook to handle the pending state while the server action is executing. The button's `disabled` attribute should be dynamically set based on the props: `!userStatus.isLoggedIn || !userStatus.isApproved || availableCopies <= 0 || isPending`. When `availableCopies <= 0`, display 'All Copies Borrowed' instead of 'Borrow' text.
 
 ## 4. Integrate the `BorrowButton` into the book detail page [pending]
 ### Dependencies: 6.3

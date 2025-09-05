@@ -27,7 +27,7 @@ Using the Supabase SQL Editor, create a new table named `profiles` with columns 
 ### Dependencies: 2.1
 ### Description: Replace the default Supabase authentication emails by creating a Supabase Edge Function that uses the Resend API to send a verification email when a new user signs up.
 ### Details:
-First, disable the default 'Confirm email' template in Supabase Auth settings. Create a new Supabase Edge Function (e.g., `send-verification-email`). This function will be triggered by a database webhook on new user creation. Inside the function, use the Resend SDK to send an email containing the `confirmation_url` from the new user's data. Store the Resend API key as a secret in Supabase.
+First, disable the default 'Confirm email' template in Supabase Auth settings. Create a new Supabase Edge Function (e.g., `send-verification-email`). This function will be triggered by a database webhook on new user creation. Inside the function, use the Resend SDK to send an email containing the `confirmation_url` from the new user's data. Additionally, send a notification email to all admin users when a new user signs up, informing them that a new user needs approval. Store the Resend API key as a secret in Supabase.
 
 ## 4. Implement Role-Based Access Control in Middleware [pending]
 ### Dependencies: 2.1, 2.2

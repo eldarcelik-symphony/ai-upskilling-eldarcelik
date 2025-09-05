@@ -8,7 +8,7 @@
 Develop an admin-only page that lists all users with their email and approval status ('Pending', 'Approved', 'Rejected'). Add buttons for admins to approve or reject new users who have verified their email. Implement search and pagination for the user list.
 
 # Test Strategy:
-As an admin, view the list of registered users. Test the search functionality. Approve a 'Pending' user and verify their status changes in the database and on the UI. Reject another user and confirm the status update.
+As an admin, view the list of registered users. Test the search functionality. Approve a 'Pending' user and verify their status changes in the database and on the UI. Confirm that the approved user receives an email notification about their approval. Reject another user and confirm the status update.
 
 # Subtasks:
 ## 1. Create Admin-Only API Route to Fetch Users [pending]
@@ -21,7 +21,7 @@ Use the server-side Supabase client from `lib/supabase/server.ts`. Check the use
 ### Dependencies: None
 ### Description: Implement two new API route handlers: `app/api/admin/users/[userId]/approve/route.ts` and `app/api/admin/users/[userId]/reject/route.ts`. These PATCH endpoints will update a user's `approval_status` in the `profiles` table to 'Approved' or 'Rejected' respectively.
 ### Details:
-Both routes must be protected for admin-only access, similar to the user list route. The `userId` will be a dynamic parameter from the URL. Use the Supabase client to perform the `update` operation on the `profiles` table where the `id` matches `userId`.
+Both routes must be protected for admin-only access, similar to the user list route. The `userId` will be a dynamic parameter from the URL. Use the Supabase client to perform the `update` operation on the `profiles` table where the `id` matches `userId`. Additionally, when a user is approved, send them an email notification using Resend to inform them that their account has been approved and they can now borrow books.
 
 ## 3. Create Admin Dashboard Page with Route Protection [pending]
 ### Dependencies: None

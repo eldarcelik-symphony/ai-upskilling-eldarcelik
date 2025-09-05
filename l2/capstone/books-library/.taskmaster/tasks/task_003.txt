@@ -27,7 +27,7 @@ Create a new server action file `lib/actions/book.actions.ts`. Implement a funct
 ### Dependencies: 3.1
 ### Description: Create a modal form for adding new books, complete with client-side validation using Zod and React Hook Form, and server-side logic for inserting the data and uploading the cover image to Supabase Storage.
 ### Details:
-Create a new component `app/(admin)/books/components/book-form.tsx`. Use Shadcn's `Dialog` component to house a form built with `react-hook-form` and the `Form` component. Define a Zod schema for the book (title, author, copies, coverImage). The form submission will trigger a new server action `createBook(formData)` in `lib/actions/book.actions.ts`. This action will upload the cover image to a 'book-covers' bucket in Supabase Storage and then insert the book record (with the image URL) into the 'books' table. Use `revalidatePath('/books')` upon success.
+Create a new component `app/(admin)/books/components/book-form.tsx`. Use Shadcn's `Dialog` component to house a form built with `react-hook-form` and the `Form` component. Define a Zod schema for the book (title, author, category, copies, coverImage). Include a category field with predefined options (e.g., Fiction, Non-Fiction, Science, History, etc.). The form submission will trigger a new server action `createBook(formData)` in `lib/actions/book.actions.ts`. This action will upload the cover image to a 'book-covers' bucket in Supabase Storage and then insert the book record (with the image URL) into the 'books' table. Use `revalidatePath('/books')` upon success.
 
 ## 4. Implement 'Edit Book' Functionality [pending]
 ### Dependencies: 3.2, 3.3
@@ -39,5 +39,5 @@ Add an 'Edit' option to the `DropdownMenu` in the 'Actions' column of the data t
 ### Dependencies: 3.2
 ### Description: Add the functionality to delete a book from the catalog. This includes a confirmation step to prevent accidental deletions and ensures the associated cover image is removed from storage.
 ### Details:
-Add a 'Delete' option to the 'Actions' column's `DropdownMenu`. On click, trigger a Shadcn `AlertDialog` to confirm the action. Upon confirmation, call a new server action `deleteBook(bookId)` in `book.actions.ts`. This action must first delete the associated cover image from Supabase Storage and then delete the book record from the database. Use `revalidatePath('/books')` to refresh the list.
+Add 'Disable' and 'Delete' options to the 'Actions' column's `DropdownMenu`. For books with borrowed copies, only show 'Disable' option. For books with no borrowed copies, show both 'Disable' and 'Delete' options. On click, trigger a Shadcn `AlertDialog` to confirm the action. Upon confirmation, call server actions `disableBook(bookId)` or `deleteBook(bookId)` in `book.actions.ts`. The disable action sets `is_active` to false, while delete action removes the book record and cover image. Use `revalidatePath('/books')` to refresh the list.
 

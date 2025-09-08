@@ -8,7 +8,7 @@
 Develop an admin-only page that lists all active borrowing records (where `returned_at` is null). The table should include book title, borrower's email, and borrow date. Implement search and pagination for this view.
 
 # Test Strategy:
-As an admin, access the dashboard and verify it shows all books currently on loan. Test the search and pagination. Cross-reference the data with user profiles to ensure accuracy and completeness.
+As an admin, access the dashboard and verify it shows all books currently on loan. Test the search and pagination. Cross-reference the data with user data to ensure accuracy and completeness.
 
 # Subtasks:
 ## 1. Create Server-Side Function to Fetch Active Borrowing Records [pending]
@@ -39,5 +39,5 @@ Utilize the existing Shadcn UI `<Pagination>` component, similar to its implemen
 ### Dependencies: 9.2
 ### Description: Implement an authorization check to ensure that only users with an 'admin' role can access the `/admin/borrowing` page.
 ### Details:
-In the `app/admin/borrowing/page.tsx` component (or a shared `app/admin/layout.tsx`), fetch the current user's session and profile data from Supabase. Check if the user's role is 'admin'. If the user is not an admin, redirect them to a different page, such as the homepage or a 'not authorized' page.
+In the `app/admin/borrowing/page.tsx` component (or a shared `app/admin/layout.tsx`), fetch the current user's session and user data from Supabase. Check if the user's role is 'ADMIN'. If the user is not an admin, redirect them to a different page, such as the homepage or a 'not authorized' page.
 

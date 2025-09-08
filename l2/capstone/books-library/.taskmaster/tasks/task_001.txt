@@ -33,7 +33,7 @@ Create a new project on the Supabase dashboard. Install the required Supabase pa
 ### Dependencies: 1.3
 ### Description: Define and implement the database schema for the `users` and `books` tables using the Supabase SQL editor.
 ### Details:
-In the Supabase SQL Editor, create the `users` table with columns for `id` (UUID, referencing `auth.users.id`), `email`, `role` (e.g., 'USER', 'ADMIN'), and `approval_status`. Create the `books` table with columns for `id`, `title`, `author`, `isbn`, `category`, `total_copies`, `available_copies`, and `is_active` (boolean, default true).
+In the Supabase SQL Editor, create the `users` table with columns for `id` (UUID, referencing `auth.users.id`), `email`, `role` (e.g., 'USER', 'ADMIN'), and `approval_status` (e.g., 'PENDING', 'APPROVED', 'REJECTED'). Create the `books` table with columns for `id`, `title`, `author`, `isbn`, `category`, `total_copies`, `available_copies`, and `is_active` (boolean, default true).
 
 ## 5. Create `borrowed_books` Table and Establish Relationships [done]
 ### Dependencies: 1.4

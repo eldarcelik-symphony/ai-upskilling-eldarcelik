@@ -21,7 +21,7 @@ In the `supabase/migrations` directory, create a new SQL file. The function shou
 ### Dependencies: 6.1
 ### Description: Create a new server action in a file like `app/actions/borrow.ts`. This action will orchestrate the borrowing process. It must authenticate the user, check their approval status, and then call the `borrow_book` RPC function created in the previous subtask. It should also handle data revalidation.
 ### Details:
-The action will take `bookId` as an argument. Use the server-side Supabase client to get the current user's ID and profile data. Verify the user is approved. If so, invoke the `borrow_book` RPC with the `bookId` and `userId`. The action should return a success or error state and call `revalidatePath('/books/[bookId]')` on success to refresh the UI.
+The action will take `bookId` as an argument. Use the server-side Supabase client to get the current user's ID and user data. Verify the user is approved. If so, invoke the `borrow_book` RPC with the `bookId` and `userId`. The action should return a success or error state and call `revalidatePath('/books/[bookId]')` on success to refresh the UI.
 
 ## 3. Develop the client-side `BorrowButton` component [pending]
 ### Dependencies: 6.2
@@ -33,7 +33,7 @@ The component should accept props like `bookId`, `availableCopies`, and `userSta
 ### Dependencies: 6.3
 ### Description: Modify the book detail page at `app/books/[bookId]/page.tsx` to fetch the current user's status and render the `BorrowButton` component with the correct props.
 ### Details:
-This page is a Server Component. In addition to fetching book data, fetch the current user's session and profile from Supabase to determine if they are logged in and approved. Pass the book's ID, `available_copies`, and the user's status down to the `BorrowButton` client component.
+This page is a Server Component. In addition to fetching book data, fetch the current user's session and user data from Supabase to determine if they are logged in and approved. Pass the book's ID, `available_copies`, and the user's status down to the `BorrowButton` client component.
 
 ## 5. Implement UI feedback for the borrow action [pending]
 ### Dependencies: 6.2, 6.3

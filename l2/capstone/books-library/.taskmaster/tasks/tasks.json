@@ -43,7 +43,7 @@
             "title": "Create `users` and `books` Tables in Supabase",
             "description": "Define and implement the database schema for the `users` and `books` tables using the Supabase SQL editor.",
             "dependencies": ["1.3"],
-            "details": "In the Supabase SQL Editor, create the `users` table with columns for `id` (UUID, referencing `auth.users.id`), `email`, `role` (e.g., 'USER', 'ADMIN'), and `approval_status`. Create the `books` table with columns for `id`, `title`, `author`, `isbn`, `category`, `total_copies`, `available_copies`, and `is_active` (boolean, default true).",
+            "details": "In the Supabase SQL Editor, create the `users` table with columns for `id` (UUID, referencing `auth.users.id`), `email`, `role` (e.g., 'USER', 'ADMIN'), and `approval_status` (e.g., 'PENDING', 'APPROVED', 'REJECTED'). Create the `books` table with columns for `id`, `title`, `author`, `isbn`, `category`, `total_copies`, `available_copies`, and `is_active` (boolean, default true).",
             "status": "done",
             "testStrategy": "Navigate to the Table Editor in the Supabase dashboard. Verify that both the `users` and `books` tables have been created with all specified columns, correct data types, and primary key constraints."
           },
@@ -66,25 +66,25 @@
         "testStrategy": "Test the user registration flow, including receiving the verification email. Test login with valid and invalid credentials. Attempt to access an admin route as a regular user and verify access is denied. Confirm admins can access protected routes.",
         "priority": "high",
         "dependencies": [1],
-        "status": "To Do",
+        "status": "in-progress",
         "subtasks": [
           {
             "id": 1,
             "title": "Implement Sign-up and Login UI with Server Actions",
             "description": "Create the user interface for the sign-up and login pages using the existing Shadcn UI components. Implement server actions to handle form submissions for both registration and authentication using the Supabase client.",
             "dependencies": [],
-            "details": "In `app/signup/page.tsx`, build a form with fields for email and password. Create a server action that uses the Supabase server client to call `supabase.auth.signUp`. In `app/login/page.tsx`, build a similar form and a server action that calls `supabase.auth.signInWithPassword`. Ensure proper error handling and user feedback for both forms.",
-            "status": "pending",
-            "testStrategy": "Test registration with a new email. Verify a success message is shown. Test login with both correct and incorrect credentials to ensure error messages are displayed properly."
+            "details": "In `app/signup/page.tsx`, build a form with fields for email, password, and confirm password. Implement client-side validation using Zod schema to ensure email format is valid, password meets minimum requirements (e.g., 8+ characters), and confirm password matches the password field. Create a server action that uses the Supabase server client to call `supabase.auth.signUp`. In `app/login/page.tsx`, build a form with email and password fields, also with Zod validation for email format and required fields. Create a server action that calls `supabase.auth.signInWithPassword`. Ensure proper error handling and user feedback for both forms, displaying validation errors inline and server errors via toast notifications.",
+            "status": "done",
+            "testStrategy": "Test registration with invalid email format, weak passwords, mismatched confirm password, and valid data. Verify appropriate validation messages appear. Test login with empty fields, invalid email format, and both correct and incorrect credentials to ensure error messages are displayed properly."
           },
           {
             "id": 2,
-            "title": "Set Up `profiles` Table and Trigger for User Role Management",
-            "description": "Create a `profiles` table in the Supabase database to store user-specific data, including their role. Implement a database trigger to automatically create a new profile for each new user upon registration.",
+            "title": "Set Up Database Trigger for User Role Management",
+            "description": "Implement a database trigger to automatically populate the `users` table with role and approval status when a new user registers.",
             "dependencies": [],
-            "details": "Using the Supabase SQL Editor, create a new table named `profiles` with columns like `id` (referencing `auth.users.id`), `email`, `role` (TEXT, default 'USER'), and `approval_status` (TEXT, default 'Pending'). Then, create a PostgreSQL function and a trigger that fires on `INSERT` into the `auth.users` table to populate the new `profiles` table with the corresponding user data.",
-            "status": "pending",
-            "testStrategy": "After setting up the trigger, register a new user via the UI. Check the `profiles` table in Supabase to confirm that a new row was automatically created with the correct `id` and the default role 'USER'."
+            "details": "Using the Supabase SQL Editor, create a PostgreSQL function and a trigger that fires on `INSERT` into the `auth.users` table to populate the `users` table with the corresponding user data including `role` (default 'USER') and `approval_status` (default 'PENDING'). This ensures that every new user automatically gets the proper role and approval status.",
+            "status": "done",
+            "testStrategy": "After setting up the trigger, register a new user via the UI. Check the `users` table in Supabase to confirm that a new row was automatically created with the correct `id`, `email`, `role` (USER), and `approval_status` (PENDING)."
           },
           {
             "id": 3,
@@ -100,16 +100,16 @@
             "title": "Implement Role-Based Access Control in Middleware",
             "description": "Modify the existing `middleware.ts` file to protect all routes under the `/admin` path, allowing access only to users with the 'ADMIN' role.",
             "dependencies": ["2.1", "2.2"],
-            "details": "In `middleware.ts`, after the session is retrieved, check if the request path starts with `/admin`. If it does, use the Supabase client to query the `profiles` table for the current user's role. If the user's role is not 'ADMIN', redirect them to the homepage. If there is no user session, redirect them to the login page. Ensure the middleware correctly handles fetching the user profile associated with the session.",
+            "details": "In `middleware.ts`, after the session is retrieved, check if the request path starts with `/admin`. If it does, use the Supabase client to query the `users` table for the current user's role. If the user's role is not 'ADMIN', redirect them to the homepage. If there is no user session, redirect them to the login page. Ensure the middleware correctly handles fetching the user data associated with the session.",
             "status": "pending",
             "testStrategy": "Log in as a regular user (role 'USER') and attempt to navigate to `/admin`. Verify you are redirected. Manually update a user's role to 'ADMIN' in the database, log in as that user, and verify you can successfully access the `/admin` page."
           },
           {
             "id": 5,
             "title": "Create a Server-Side Utility to Fetch Current User with Role",
-            "description": "Develop a reusable server-side helper function to retrieve the currently authenticated user's session and their corresponding profile data, including their role and approval status.",
+            "description": "Develop a reusable server-side helper function to retrieve the currently authenticated user's session and their corresponding user data, including their role and approval status.",
             "dependencies": ["2.2"],
-            "details": "In the `lib` directory, create a new file (e.g., `lib/auth.ts`). Define an async function, `getUserWithProfile`, that creates a Supabase server client, gets the current user from `supabase.auth.getUser()`, and if a user exists, queries the `profiles` table for their full profile. This function will encapsulate the logic of joining `auth.users` with `profiles` and can be used in the middleware and other server components/actions.",
+            "details": "In the `lib` directory, create a new file (e.g., `lib/auth.ts`). Define an async function, `getUserWithRole`, that creates a Supabase server client, gets the current user from `supabase.auth.getUser()`, and if a user exists, queries the `users` table for their full user data including role and approval status. This function will encapsulate the logic of joining `auth.users` with `users` and can be used in the middleware and other server components/actions.",
             "status": "pending",
             "testStrategy": "Call this new utility function from a server component on a test page. Log in as a user and verify the function correctly returns the user's email, role, and approval status. Log out and verify it returns null."
           }
@@ -233,8 +233,8 @@
         "id": 5,
         "title": "Implement Admin User Management Dashboard",
         "description": "Create an admin dashboard to view all registered users and manage their approval status.",
-        "details": "Develop an admin-only page that lists all users with their email and approval status ('Pending', 'Approved', 'Rejected'). Add buttons for admins to approve or reject new users who have verified their email. Implement search and pagination for the user list.",
-        "testStrategy": "As an admin, view the list of registered users. Test the search functionality. Approve a 'Pending' user and verify their status changes in the database and on the UI. Confirm that the approved user receives an email notification about their approval. Reject another user and confirm the status update.",
+        "details": "Develop an admin-only page that lists all users with their email and approval status ('PENDING', 'APPROVED', 'REJECTED'). Add buttons for admins to approve or reject new users who have verified their email. Implement search and pagination for the user list.",
+        "testStrategy": "As an admin, view the list of registered users. Test the search functionality. Approve a 'PENDING' user and verify their status changes in the database and on the UI. Confirm that the approved user receives an email notification about their approval. Reject another user and confirm the status update.",
         "priority": "high",
         "dependencies": [2],
         "status": "To Do",
@@ -242,27 +242,27 @@
           {
             "id": 1,
             "title": "Create Admin-Only API Route to Fetch Users",
-            "description": "Develop a new API route handler at `app/api/admin/users/route.ts`. This GET endpoint should fetch users from the `profiles` table. It must be protected to only allow 'ADMIN' role access. Implement pagination using `page` and `limit` query parameters, and a search feature using a `query` parameter to filter by email. The response should include the user list and total count for pagination.",
+            "description": "Develop a new API route handler at `app/api/admin/users/route.ts`. This GET endpoint should fetch users from the `users` table. It must be protected to only allow 'ADMIN' role access. Implement pagination using `page` and `limit` query parameters, and a search feature using a `query` parameter to filter by email. The response should include the user list and total count for pagination.",
             "dependencies": [],
-            "details": "Use the server-side Supabase client from `lib/supabase/server.ts`. Check the user's role by querying the `profiles` table for the authenticated user's ID. If the role is not 'ADMIN', return a 403 Forbidden error. Use Supabase query methods like `.ilike()` for search and `.range()` for pagination.",
+            "details": "Use the server-side Supabase client from `lib/supabase/server.ts`. Check the user's role by querying the `users` table for the authenticated user's ID. If the role is not 'ADMIN', return a 403 Forbidden error. Use Supabase query methods like `.ilike()` for search and `.range()` for pagination.",
             "status": "pending",
             "testStrategy": "Use an API client like Postman to test the endpoint. Verify that non-admin users receive a 403 error. Test the pagination and search query parameters to ensure the correct data and count are returned."
           },
           {
             "id": 2,
             "title": "Create API Routes for User Approval and Rejection",
-            "description": "Implement two new API route handlers: `app/api/admin/users/[userId]/approve/route.ts` and `app/api/admin/users/[userId]/reject/route.ts`. These PATCH endpoints will update a user's `approval_status` in the `profiles` table to 'Approved' or 'Rejected' respectively.",
+            "description": "Implement two new API route handlers: `app/api/admin/users/[userId]/approve/route.ts` and `app/api/admin/users/[userId]/reject/route.ts`. These PATCH endpoints will update a user's `approval_status` in the `users` table to 'APPROVED' or 'REJECTED' respectively.",
             "dependencies": [],
-            "details": "Both routes must be protected for admin-only access, similar to the user list route. The `userId` will be a dynamic parameter from the URL. Use the Supabase client to perform the `update` operation on the `profiles` table where the `id` matches `userId`. Additionally, when a user is approved, send them an email notification using Resend to inform them that their account has been approved and they can now borrow books.",
+            "details": "Both routes must be protected for admin-only access, similar to the user list route. The `userId` will be a dynamic parameter from the URL. Use the Supabase client to perform the `update` operation on the `users` table where the `id` matches `userId`. Additionally, when a user is approved, send them an email notification using Resend to inform them that their account has been approved and they can now borrow books.",
             "status": "pending",
-            "testStrategy": "Using an API client, send PATCH requests to these endpoints with an admin user's token. Verify that the user's status is updated correctly in the Supabase `profiles` table. Confirm that an approval email is sent to the user when they are approved. Test that requests from non-admin users fail."
+            "testStrategy": "Using an API client, send PATCH requests to these endpoints with an admin user's token. Verify that the user's status is updated correctly in the Supabase `users` table. Confirm that an approval email is sent to the user when they are approved. Test that requests from non-admin users fail."
           },
           {
             "id": 3,
             "title": "Create Admin Dashboard Page with Route Protection",
             "description": "Create a new page component at `app/admin/users/page.tsx`. This page will serve as the UI for the user management dashboard. Implement route protection to ensure this page is only accessible to logged-in users with the 'ADMIN' role.",
             "dependencies": [],
-            "details": "This will be a Next.js Server Component. In the component, use the server-side Supabase client (`createClient` from `lib/supabase/server.ts`) to fetch the current user's session and profile. If the user is not an admin, use Next.js's `redirect` function to send them to the home page.",
+            "details": "This will be a Next.js Server Component. In the component, use the server-side Supabase client (`createClient` from `lib/supabase/server.ts`) to fetch the current user's session and user data. If the user is not an admin, use Next.js's `redirect` function to send them to the home page.",
             "status": "pending",
             "testStrategy": "Log in as a non-admin user and attempt to navigate to `/admin/users`; verify you are redirected. Log in as an admin user and verify you can access the page successfully."
           },
@@ -385,7 +385,7 @@
             "title": "Integrate Data and Display Borrowed Books on Profile Page",
             "description": "On the profile page, call the server action to get the borrowed books and render them using the `BorrowedBookCard` component. Handle the case where the user has no borrowed books.",
             "dependencies": ["7.1", "7.2", "7.3"],
-            "details": "In `app/profile/page.tsx`, import and call the `getBorrowedBooks` server action created in subtask 1. Also fetch the user's approval status from their profile. Map over the returned array of books and render a `BorrowedBookCard` for each item. If the array is empty, display a message such as 'You have no books currently borrowed.' Display the user's approval status prominently at the top of the profile page (e.g., 'Status: Pending Approval', 'Status: Approved', 'Status: Rejected'). Wrap the list in a container and add a heading like 'My Borrowed Books'.",
+            "details": "In `app/profile/page.tsx`, import and call the `getBorrowedBooks` server action created in subtask 1. Also fetch the user's approval status from their user data. Map over the returned array of books and render a `BorrowedBookCard` for each item. If the array is empty, display a message such as 'You have no books currently borrowed.' Display the user's approval status prominently at the top of the profile page (e.g., 'Status: Pending Approval', 'Status: Approved', 'Status: Rejected'). Wrap the list in a container and add a heading like 'My Borrowed Books'.",
             "status": "pending",
             "testStrategy": "Log in as a user with borrowed books and verify the list appears correctly. Log in as a user with no borrowed books and confirm the empty state message is shown."
           },
@@ -517,7 +517,7 @@
     ],
     "metadata": {
       "created": "2025-09-03T15:24:06.858Z",
-      "updated": "2025-01-27T10:30:00.000Z",
+      "updated": "2025-09-08T09:38:38.421Z",
       "description": "Tasks for master context"
     }
   }

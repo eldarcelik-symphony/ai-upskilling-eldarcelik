@@ -14,9 +14,9 @@ Start Date: 25. Aug 2025. | Target Completion: 20. Oct 2025.
 - [x] [Intro to LLMs — Andrej Karpathy (YouTube) by Andrej Karpathy](https://www.youtube.com/watch?v=zjkBMFhNj_g) - 1h - Key takeaway: How LLMs are trained (pretraining, supervised fine-tuning, RLHF), LLM as 'operative system', LLM security.
 - [x] [Deep Dive into LLMs like ChatGPT by Andrej Karpathy](https://www.youtube.com/watch?v=7xTGNNLPyMI&list=PLAqhIrjkxbuW9U8-vZ_s_cjKPT_FqRStI&index=3) - 3.5h - Key takeaway: How LLMs are built and trained, their challenges like hallucinations and jagged intelligence so we need to be careful of how to use AI, key methods like RLFH, and major models.
 - [x] [How I use LLMs by Andrej Karpathy](https://www.youtube.com/watch?v=EWvNQjAaOHw&list=PLAqhIrjkxbuW9U8-vZ_s_cjKPT_FqRStI&index=4) - 2.5h - Key takeaway: LLM interactions with examples, context window and tokens explanation, training phases with examples, tools used: internet search, deep search, uploads, images, speach, etc.
-- [ ] [Transformers, the tech behind LLMs by 3Blue1Brown](https://www.youtube.com/watch?v=wjZofJX0v4M&t=183s) - [hours] - Key takeaway: ...
-- [ ] [Attention in transformers, step-by-step by 3Blue1Brown](https://www.youtube.com/watch?v=eMlx5fFNoYc&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=7) - [hours] - Key takeaway: ...
-- [ ] [How might LLMs store facts by 3Blue1Brown](https://www.youtube.com/watch?v=9-Jl0dxWQs8&t=367s) - [hours] - Key takeaway: ...
+- [x] [Transformers, the tech behind LLMs by 3Blue1Brown](https://www.youtube.com/watch?v=wjZofJX0v4M&t=183s) - 0.5h - Key takeaway:
+- [x] [Attention in transformers, step-by-step by 3Blue1Brown](https://www.youtube.com/watch?v=eMlx5fFNoYc&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=7) - 0.5h - Key takeaway:
+- [x] [How might LLMs store facts by 3Blue1Brown](https://www.youtube.com/watch?v=9-Jl0dxWQs8&t=367s) - 0.5h - Key takeaway:
 - [x] [Prompting For AI Agents by Y Combinator](https://www.youtube.com/watch?v=DL82mGde6wo) - 0.5h - Key takeaway: How to think about using AI and different models. Explaining forward deployed engineers approach.
 - [x] [RAG vs Fine-Tuning vs Prompt Engineering: Optimizing AI Models by IBM](https://www.youtube.com/watch?v=zYGDpG-pTho) - 0.3h - Key takeaway: RAG retrieves external knowledge to ground model outputs, fine-tuning adapts a model’s weights to a domain or task, and prompt engineering shapes responses by carefully designing the input.
 - [x] [System Prompts (GitHub)](https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools) - 0.5h - Key takeaway: Useful examples of Cursor agent prompts, chat prompts, memory prompts.
@@ -63,9 +63,9 @@ Start Date: 25. Aug 2025. | Target Completion: 20. Oct 2025.
 
 ### Productivity Metrics
 
-| Component/Feature  | Traditional Estimate | AI-Assisted Actual | Gain % | Notes           |
-| ------------------ | -------------------- | ------------------ | ------ | --------------- |
-| [Specific feature] | X hours/days         | Y hours            | Z%     | [Approach used] |
+| Component/Feature                                           | Traditional Estimate | AI-Assisted Actual | Gain % | Notes                                                                          |
+| ----------------------------------------------------------- | -------------------- | ------------------ | ------ | ------------------------------------------------------------------------------ |
+| Initial project setup (Next.js, Tailwind, Shadcn, Supabase) | 16h                  | 8h                 | 50%    | Used Task Master AI to create task and subtasks, then written code with Cursor |
 
 ### New Estimation Capability
 

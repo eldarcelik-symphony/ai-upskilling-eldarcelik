@@ -34,16 +34,15 @@ Replace the placeholder values with your actual Supabase credentials.
 2. Copy the contents of `supabase/schema.sql`
 3. Paste it into the SQL Editor and run it
 
-**Note**: If you encounter errors about existing triggers or policies, the schema includes `DROP IF EXISTS` statements to handle this safely.
-
 This will create:
 
 - `users` table with authentication integration
 - `books` table for library inventory
 - `borrowed_books` table for tracking loans
-- Proper indexes and constraints
-- Row Level Security (RLS) policies (simplified for development)
-- Automatic triggers for data consistency
+- Performance indexes for optimal query speed
+- Row Level Security (RLS) policies for data protection
+- Automatic triggers for data consistency and business logic
+- Functions for automatic user creation and book availability tracking
 
 ## 5. Verify Setup
 
@@ -51,33 +50,6 @@ This will create:
 2. Visit the test page at `http://localhost:3000/test-supabase`
 3. Check that the connection test shows "Connected to Supabase"
 4. In Supabase dashboard, verify the tables were created correctly
-
-## 6. Troubleshooting
-
-### Connection Issues
-
-If you see "Missing Supabase environment variables":
-
-- Ensure your `.env.local` file exists in the project root
-- Verify the environment variable names are exactly as shown above
-- Restart your development server after adding environment variables
-
-### Database Errors
-
-If you encounter "infinite recursion detected in policy" errors:
-
-- The schema has been updated to use simplified policies
-- Re-run the `supabase/schema.sql` file in your Supabase SQL Editor
-- The updated schema includes `DROP IF EXISTS` statements to handle existing objects
-
-### Test Page
-
-The test page at `/test-supabase` will:
-
-- Automatically test your Supabase connection
-- Show which tables are accessible
-- Allow you to test database write operations
-- Provide specific error messages if something is wrong
 
 ## Database Schema Overview
 
@@ -87,6 +59,8 @@ The test page at `/test-supabase` will:
 - `email`: User's email address
 - `role`: 'USER' or 'ADMIN'
 - `approval_status`: 'PENDING', 'APPROVED', or 'REJECTED'
+- `created_at`: Timestamp when user was created
+- `updated_at`: Timestamp when user was last updated
 
 ### Books Table
 
@@ -96,8 +70,10 @@ The test page at `/test-supabase` will:
 - `isbn`: Unique ISBN
 - `category`: Book category
 - `total_copies`: Total number of copies
-- `available_copies`: Currently available copies
+- `available_copies`: Currently available copies (automatically managed)
 - `is_active`: Whether the book is active
+- `created_at`: Timestamp when book was added
+- `updated_at`: Timestamp when book was last updated
 
 ### Borrowed Books Table
 
@@ -107,3 +83,34 @@ The test page at `/test-supabase` will:
 - `borrowed_at`: When the book was borrowed
 - `returned_at`: When the book was returned (null if still borrowed)
 - `due_date`: When the book should be returned
+- `created_at`: Timestamp when record was created
+- `updated_at`: Timestamp when record was last updated
+
+## Database Features
+
+### Automatic Functions & Triggers
+
+1. **User Auto-Creation**: When a new user signs up via Supabase Auth, they are automatically added to the `users` table with 'PENDING' approval status.
+
+2. **Book Availability Tracking**: The `available_copies` field is automatically updated when books are borrowed or returned through triggers.
+
+3. **Timestamp Management**: All tables have `created_at` and `updated_at` fields that are automatically maintained.
+
+### Performance Optimizations
+
+- **Indexes** on frequently queried fields:
+  - User email, role, and approval status
+  - Book ISBN, category, and active status
+  - Borrowed books by user, book, due date, and return status
+
+### Security (Row Level Security)
+
+- **Users**: Can view and update their own data, plus view all users
+- **Books**: Public read access, authenticated users can manage books
+- **Borrowed Books**: Users can only view and manage their own borrowed books
+
+### Data Integrity
+
+- **Constraints**: Proper foreign key relationships and check constraints
+- **Unique Constraints**: Prevents duplicate book borrowings and ensures data consistency
+- **Cascade Deletes**: Proper cleanup when users or books are removed

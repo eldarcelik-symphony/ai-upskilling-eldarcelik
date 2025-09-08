@@ -15,10 +15,7 @@ export async function testSupabaseConnection(): Promise<ConnectionTestResult> {
 
   try {
     // Test basic connection by trying to query the books table
-    const { error } = await supabase
-      .from('books')
-      .select('count')
-      .limit(1);
+    const { error } = await supabase.from('books').select('count').limit(1);
 
     if (error) {
       throw error;

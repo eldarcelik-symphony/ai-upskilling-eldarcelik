@@ -6,6 +6,9 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
+type Role = 'USER' | 'ADMIN';
+type ApprovalStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
 export interface Database {
   public: {
     Tables: {
@@ -13,24 +16,24 @@ export interface Database {
         Row: {
           id: string;
           email: string;
-          role: 'USER' | 'ADMIN';
-          approval_status: 'PENDING' | 'APPROVED' | 'REJECTED';
+          role: Role;
+          approval_status: ApprovalStatus;
           created_at: string;
           updated_at: string;
         };
         Insert: {
           id: string;
           email: string;
-          role?: 'USER' | 'ADMIN';
-          approval_status?: 'PENDING' | 'APPROVED' | 'REJECTED';
+          role?: Role;
+          approval_status?: ApprovalStatus;
           created_at?: string;
           updated_at?: string;
         };
         Update: {
           id?: string;
           email?: string;
-          role?: 'USER' | 'ADMIN';
-          approval_status?: 'PENDING' | 'APPROVED' | 'REJECTED';
+          role?: Role;
+          approval_status?: ApprovalStatus;
           created_at?: string;
           updated_at?: string;
         };

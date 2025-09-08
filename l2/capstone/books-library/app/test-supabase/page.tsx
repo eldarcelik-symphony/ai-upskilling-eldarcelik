@@ -22,10 +22,7 @@ export default function TestSupabasePage() {
       setLoading(true);
 
       // Test basic connection
-      const { error } = await supabase
-        .from('books')
-        .select('count')
-        .limit(1);
+      const { error } = await supabase.from('books').select('count').limit(1);
 
       if (error) {
         throw error;

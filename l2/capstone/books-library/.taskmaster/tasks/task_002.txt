@@ -1,6 +1,6 @@
 # Task ID: 2
 # Title: Implement User Authentication and Role-Based Access
-# Status: To Do
+# Status: in-progress
 # Dependencies: 1
 # Priority: high
 # Description: Build the complete user authentication flow including registration, login, email verification, and role-based route protection.
@@ -23,11 +23,11 @@ In `app/signup/page.tsx`, build a form with fields for email, password, and conf
 ### Details:
 Using the Supabase SQL Editor, create a PostgreSQL function and a trigger that fires on `INSERT` into the `auth.users` table to populate the `users` table with the corresponding user data including `role` (default 'USER') and `approval_status` (default 'PENDING'). This ensures that every new user automatically gets the proper role and approval status.
 
-## 3. Integrate Resend for Custom Email Verification [pending]
+## 3. Configure Supabase Default Email Verification [done]
 ### Dependencies: 2.1
-### Description: Replace the default Supabase authentication emails by creating a Supabase Edge Function that uses the Resend API to send a verification email when a new user signs up.
+### Description: Configure Supabase to use its default email verification system for user registration. No custom email integration needed for verification.
 ### Details:
-First, disable the default 'Confirm email' template in Supabase Auth settings. Create a new Supabase Edge Function (e.g., `send-verification-email`). This function will be triggered by a database webhook on new user creation. Inside the function, use the Resend SDK to send an email containing the `confirmation_url` from the new user's data. Additionally, send a notification email to all admin users when a new user signs up, informing them that a new user needs approval. Store the Resend API key as a secret in Supabase.
+Ensure Supabase Auth is configured to send verification emails using a template. Users will receive a custom template Supabase verification emails when they register. No custom Resend integration is needed for this step.
 
 ## 4. Implement Role-Based Access Control in Middleware [pending]
 ### Dependencies: 2.1, 2.2

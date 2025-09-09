@@ -88,12 +88,12 @@
           },
           {
             "id": 3,
-            "title": "Integrate Resend for Custom Email Verification",
-            "description": "Replace the default Supabase authentication emails by creating a Supabase Edge Function that uses the Resend API to send a verification email when a new user signs up.",
+            "title": "Configure Supabase Default Email Verification",
+            "description": "Configure Supabase to use its default email verification system for user registration. No custom email integration needed for verification.",
             "dependencies": ["2.1"],
-            "details": "First, disable the default 'Confirm email' template in Supabase Auth settings. Create a new Supabase Edge Function (e.g., `send-verification-email`). This function will be triggered by a database webhook on new user creation. Inside the function, use the Resend SDK to send an email containing the `confirmation_url` from the new user's data. Additionally, send a notification email to all admin users when a new user signs up, informing them that a new user needs approval. Store the Resend API key as a secret in Supabase.",
-            "status": "pending",
-            "testStrategy": "Register a new user. Verify that no email is sent from the default Supabase provider. Confirm that a custom-formatted email from Resend is received at the registration address and that the verification link works correctly."
+            "details": "Ensure Supabase Auth is configured to send verification emails using a template. Users will receive a custom template Supabase verification emails when they register. No custom Resend integration is needed for this step.",
+            "status": "done",
+            "testStrategy": "Register a new user and verify that the custom template Supabase verification email is received and the verification link works correctly."
           },
           {
             "id": 4,

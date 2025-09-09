@@ -36,7 +36,7 @@ export async function signUpAction(formData: z.infer<typeof signUpSchema>) {
 
     if (data.user) {
       // Check if the trigger created the user record
-      const { data: userData, error: userError } = await supabase
+      const { error: userError } = await supabase
         .from('users')
         .select('*')
         .eq('id', data.user.id)

@@ -49,6 +49,7 @@ export interface Database {
           total_copies: number;
           available_copies: number;
           is_active: boolean;
+          cover_image_url: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -61,6 +62,7 @@ export interface Database {
           total_copies: number;
           available_copies: number;
           is_active?: boolean;
+          cover_image_url?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -73,6 +75,7 @@ export interface Database {
           total_copies?: number;
           available_copies?: number;
           is_active?: boolean;
+          cover_image_url?: string | null;
           created_at?: string;
           updated_at?: string;
         };

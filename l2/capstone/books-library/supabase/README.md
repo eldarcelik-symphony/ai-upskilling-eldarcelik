@@ -37,12 +37,14 @@ Replace the placeholder values with your actual Supabase credentials.
 This will create:
 
 - `users` table with authentication integration
-- `books` table for library inventory
+- `books` table for library inventory with cover image support
 - `borrowed_books` table for tracking loans
+- `book-covers` storage bucket for cover image management
 - Performance indexes for optimal query speed
 - Row Level Security (RLS) policies for data protection
 - Automatic triggers for data consistency and business logic
 - Functions for automatic user creation and book availability tracking
+- Storage policies for secure image upload and management
 
 ## 5. Verify Setup
 
@@ -72,6 +74,7 @@ This will create:
 - `total_copies`: Total number of copies
 - `available_copies`: Currently available copies (automatically managed)
 - `is_active`: Whether the book is active
+- `cover_image_url`: URL to the book cover image stored in Supabase Storage
 - `created_at`: Timestamp when book was added
 - `updated_at`: Timestamp when book was last updated
 
@@ -96,6 +99,8 @@ This will create:
 
 3. **Timestamp Management**: All tables have `created_at` and `updated_at` fields that are automatically maintained.
 
+4. **Cover Image Management**: Storage bucket and policies are created for secure book cover image upload and management.
+
 ### Performance Optimizations
 
 - **Indexes** on frequently queried fields:
@@ -108,6 +113,7 @@ This will create:
 - **Users**: Can view and update their own data, plus view all users
 - **Books**: Public read access, authenticated users can manage books
 - **Borrowed Books**: Users can only view and manage their own borrowed books
+- **Storage (Book Covers)**: Public read access, only admins can upload/update/delete cover images
 
 ### Data Integrity
 

@@ -1,13 +1,11 @@
 import { createClient } from '@/lib/supabase/server';
 import { Role, ApprovalStatus } from '@/lib/supabase/types';
-import { redirect } from 'next/navigation';
+import { ROLES } from '@/lib/constants';
 
-// Constants for role and approval status values
-export const ROLES: Record<Role, Role> = {
-  USER: 'USER',
-  ADMIN: 'ADMIN',
-};
+// Re-export ROLES for backward compatibility
+export { ROLES };
 
+// Constants for approval status values
 export const APPROVAL_STATUS: Record<ApprovalStatus, ApprovalStatus> = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
@@ -27,8 +25,9 @@ export type UserWithRole = {
 export type AuthUser = {
   id: string;
   email?: string;
-  user_metadata?: Record<string, any>;
-  app_metadata?: Record<string, any>;
+  role: Role;
+  user_metadata?: Record<string, unknown>;
+  app_metadata?: Record<string, unknown>;
 };
 
 /**
@@ -78,21 +77,3 @@ export async function getUserWithRole(): Promise<UserWithRole | null> {
   }
 }
 
-/**
- * Server action to sign out the current user and redirect.
- */
-export async function logoutUser() {
-  'use server';
-  
-  const supabase = await createClient();
-  
-  // Sign out the user
-  const { error } = await supabase.auth.signOut();
-  
-  if (error) {
-    console.error('Logout error:', error);
-  }
-  
-  // Redirect to home page
-  redirect('/');
-}

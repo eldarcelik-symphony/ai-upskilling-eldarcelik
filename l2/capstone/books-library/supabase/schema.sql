@@ -25,9 +25,13 @@ CREATE TABLE books (
     total_copies INTEGER NOT NULL DEFAULT 1 CHECK (total_copies > 0),
     available_copies INTEGER NOT NULL DEFAULT 1 CHECK (available_copies >= 0 AND available_copies <= total_copies),
     is_active BOOLEAN NOT NULL DEFAULT true,
+    cover_image_url TEXT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Add comment to document the cover_image_url column
+COMMENT ON COLUMN books.cover_image_url IS 'URL to the book cover image stored in Supabase Storage';
 
 -- Create borrowed_books table
 CREATE TABLE borrowed_books (
@@ -183,3 +187,49 @@ CREATE POLICY "Users can borrow books" ON borrowed_books
 -- Users can return their own books
 CREATE POLICY "Users can return their own books" ON borrowed_books
     FOR UPDATE USING (auth.uid() = user_id);
+
+-- Create storage bucket for book covers
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('book-covers', 'book-covers', true);
+
+-- RLS policies for book-covers storage bucket
+
+-- Allow anyone to view book cover images
+CREATE POLICY "Anyone can view book covers" ON storage.objects
+FOR SELECT USING (bucket_id = 'book-covers');
+
+-- Allow only admins to upload book covers
+CREATE POLICY "Only admins can upload book covers" ON storage.objects
+FOR INSERT WITH CHECK (
+  bucket_id = 'book-covers' 
+  AND auth.role() = 'authenticated'
+  AND EXISTS (
+    SELECT 1 FROM users 
+    WHERE users.id = auth.uid() 
+    AND users.role = 'ADMIN'
+  )
+);
+
+-- Allow only admins to update book covers
+CREATE POLICY "Only admins can update book covers" ON storage.objects
+FOR UPDATE USING (
+  bucket_id = 'book-covers' 
+  AND auth.role() = 'authenticated'
+  AND EXISTS (
+    SELECT 1 FROM users 
+    WHERE users.id = auth.uid() 
+    AND users.role = 'ADMIN'
+  )
+);
+
+-- Allow only admins to delete book covers
+CREATE POLICY "Only admins can delete book covers" ON storage.objects
+FOR DELETE USING (
+  bucket_id = 'book-covers' 
+  AND auth.role() = 'authenticated'
+  AND EXISTS (
+    SELECT 1 FROM users 
+    WHERE users.id = auth.uid() 
+    AND users.role = 'ADMIN'
+  )
+);

@@ -29,15 +29,21 @@ Using the Supabase SQL Editor, create a PostgreSQL function and a trigger that f
 ### Details:
 Ensure Supabase Auth is configured to send verification emails using a template. Users will receive a custom template Supabase verification emails when they register. No custom Resend integration is needed for this step.
 
-## 4. Implement Role-Based Access Control in Middleware [pending]
+## 4. Implement Role-Based Access Control in Middleware [done]
 ### Dependencies: 2.1, 2.2
 ### Description: Modify the existing `middleware.ts` file to protect all routes under the `/admin` path, allowing access only to users with the 'ADMIN' role.
 ### Details:
 In `middleware.ts`, after the session is retrieved, check if the request path starts with `/admin`. If it does, use the Supabase client to query the `users` table for the current user's role. If the user's role is not 'ADMIN', redirect them to the homepage. If there is no user session, redirect them to the login page. Ensure the middleware correctly handles fetching the user data associated with the session.
 
-## 5. Create a Server-Side Utility to Fetch Current User with Role [pending]
+## 5. Create a Server-Side Utility to Fetch Current User with Role [done]
 ### Dependencies: 2.2
 ### Description: Develop a reusable server-side helper function to retrieve the currently authenticated user's session and their corresponding user data, including their role and approval status.
 ### Details:
 In the `lib` directory, create a new file (e.g., `lib/auth.ts`). Define an async function, `getUserWithRole`, that creates a Supabase server client, gets the current user from `supabase.auth.getUser()`, and if a user exists, queries the `users` table for their full user data including role and approval status. This function will encapsulate the logic of joining `auth.users` with `users` and can be used in the middleware and other server components/actions.
+
+## 6. Implement Navigation Component with Authentication Actions [done]
+### Dependencies: 2.5
+### Description: Create a reusable navigation component that displays different links based on user authentication status and role, including logout functionality.
+### Details:
+Create a `components/navigation.tsx` component that uses `getUserWithRole()` to fetch user data. Display conditional navigation links: Home, Admin (for ADMIN users only), Login/Signup (for unauthenticated users), and Logout (for authenticated users). Implement logout functionality using a server action `logoutUser()` that calls `supabase.auth.signOut()` and redirects to home. Update the root layout to include the navigation component.
 

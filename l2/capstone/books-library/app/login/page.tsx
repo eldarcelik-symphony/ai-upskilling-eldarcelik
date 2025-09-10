@@ -45,10 +45,6 @@ export default function LoginPage() {
       const result = await signInAction(data);
 
       if (result.success) {
-        toast({
-          title: 'Success!',
-          description: 'You have been signed in successfully.',
-        });
         router.push('/');
       } else {
         toast({

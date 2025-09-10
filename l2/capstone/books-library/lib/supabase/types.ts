@@ -6,8 +6,8 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-type Role = 'USER' | 'ADMIN';
-type ApprovalStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+export type Role = 'USER' | 'ADMIN';
+export type ApprovalStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
 export interface Database {
   public: {

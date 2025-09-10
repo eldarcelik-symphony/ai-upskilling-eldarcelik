@@ -63,9 +63,10 @@ Start Date: 25. Aug 2025. | Target Completion: 20. Oct 2025.
 
 ### Productivity Metrics
 
-| Component/Feature                                                  | Traditional Estimate | AI-Assisted Actual | Gain % | Notes                                                                                           |
-| ------------------------------------------------------------------ | -------------------- | ------------------ | ------ | ----------------------------------------------------------------------------------------------- |
-| Initial project setup (Next.js, React, Tailwind, Shadcn, Supabase) | 16h                  | 8h                 | 50%    | Used Task Master AI to create tasks and subtasks. After that, the code is written using Cursor. |
+| Component/Feature                                                  | Traditional Estimate | AI-Assisted Actual | Gain % | Notes                                                                                                                                                                                                  |
+| ------------------------------------------------------------------ | -------------------- | ------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Initial project setup (Next.js, React, Tailwind, Shadcn, Supabase) | 16h                  | 8h                 | 50%    | Used Task Master AI to create task and subtasks. After that, the code is written using Cursor.                                                                                                         |
+| Implement User Authentication and Role-Based Access                | 20h                  | 10h                | 50%    | Used Task Master AI to create task and subtasks. After that, the code is written using Cursor. For Supabase integration is used Supabase Dashboard. Used React Hook Form and Zod forms and validations |
 
 ### New Estimation Capability
 

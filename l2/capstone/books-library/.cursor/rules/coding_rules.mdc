@@ -36,6 +36,8 @@ alwaysApply: true
 - Use explicit variable names over short, ambiguous ones
 - Avoid magic numbers—use named constants
 - Use JSDoc comments for functions and components
+- Use constants from existing files (e.g., ROLES.ADMIN instead of 'ADMIN')
+- Do not use 'any'
 
 # DEVELOPMENT WORKFLOW
 

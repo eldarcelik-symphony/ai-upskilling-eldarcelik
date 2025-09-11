@@ -17,11 +17,11 @@ As an admin, create a new book and verify it appears in the list. Edit an existi
 ### Details:
 Create a new route group `app/(admin)`. In `app/(admin)/layout.tsx`, fetch the user's profile and redirect non-admin users. Create the page file `app/(admin)/books/page.tsx`. In a new file, `app/(admin)/books/components/data-table.tsx`, build a client component that uses Shadcn's `Table` component to render columns and data. This initial version will use mock data and define the columns (Cover, Title, Author, Copies, Actions).
 
-## 2. Implement Server-Side Book Fetching with Search and Pagination [done]
+## 2. Implement Server-Side Book Fetching with Search, Pagination, and Sorting [done]
 ### Dependencies: 3.1
-### Description: Connect the data table to the Supabase backend to fetch and display a paginated list of all books. Implement server-side search functionality based on URL query parameters.
+### Description: Connect the data table to the Supabase backend to fetch and display a paginated list of all books. Implement server-side search functionality with pagination and sorting based on URL query parameters for all table columns.
 ### Details:
-Create a new server action file `lib/actions/book.actions.ts`. Implement a function `getBooks({ page, limit, query })` that queries the 'books' table in Supabase with pagination and a text search on 'title' and 'author'. In `app/(admin)/books/page.tsx`, read the search parameters from the URL, call this new server action, and pass the fetched data and pagination details to the `data-table` client component. Wire up the Shadcn `Pagination` and `Input` components in the data table to update the URL search parameters.
+Create a new server action file `lib/actions/book.actions.ts`. Implement a function `getBooks({ page, limit, query, sortField, sortDirection })` that queries the 'books' table in Supabase with pagination, text search on 'title', 'author', and 'category', and sorting. Include the `cover_image_url` field in the query. In `app/(admin)/books/page.tsx`, read the search parameters from the URL, call this new server action, and pass the fetched data and pagination details to the `data-table` client component. Wire up the Shadcn `Pagination` and `Input` components in the data table to update the URL search parameters. Implement comprehensive server-side sorting functionality with three-state sorting (ascending, descending, no sort) for all columns including title, author, ISBN, category, total copies, available copies, and status. Create a `useServerSort` hook to manage URL parameters and a `SortableTableHeader` component with visual indicators for active sort state and clear sort functionality.
 
 ## 3. Develop 'Add Book' Form with Validation and Image Upload [done]
 ### Dependencies: 3.1

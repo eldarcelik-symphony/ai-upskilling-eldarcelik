@@ -128,11 +128,11 @@
         "id": 3,
         "title": "Build Admin Book Management (CRUD)",
         "description": "Develop the admin-only interface for creating, reading, updating, and deleting books in the library catalog.",
-        "details": "Create an admin-protected page to display a list of all books with pagination and search. Implement forms using React Hook Form and Zod for adding and editing book details (title, author, category, cover image, copies). Use Supabase Storage for cover image uploads.",
+        "details": "Create an admin-protected page to display a list of all books with server-side pagination, search, and sorting. Implement forms using React Hook Form and Zod for adding and editing book details (title, author, category, cover image, copies). Use Supabase Storage for cover image uploads.",
         "testStrategy": "As an admin, create a new book and verify it appears in the list. Edit an existing book's details and confirm the changes are saved. Delete a book and ensure it is removed. Test form validation for required fields and data types.",
         "priority": "high",
         "dependencies": [2],
-        "status": "in progress",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -145,12 +145,12 @@
           },
           {
             "id": 2,
-            "title": "Implement Server-Side Book Fetching with Search and Pagination",
-            "description": "Connect the data table to the Supabase backend to fetch and display a paginated list of all books. Implement server-side search functionality based on URL query parameters.",
+            "title": "Implement Server-Side Book Fetching with Search, Pagination, and Sorting",
+            "description": "Connect the data table to the Supabase backend to fetch and display a paginated list of all books. Implement server-side search functionality with pagination and sorting based on URL query parameters for all table columns.",
             "dependencies": ["3.1"],
-            "details": "Create a new server action file `lib/actions/book.actions.ts`. Implement a function `getBooks({ page, limit, query })` that queries the 'books' table in Supabase with pagination and a text search on 'title' and 'author'. Include the `cover_image_url` field in the query. In `app/(admin)/books/page.tsx`, read the search parameters from the URL, call this new server action, and pass the fetched data and pagination details to the `data-table` client component. Wire up the Shadcn `Pagination` and `Input` components in the data table to update the URL search parameters.",
+            "details": "Create a new server action file `lib/actions/book.actions.ts`. Implement a function `getBooks({ page, limit, query, sortField, sortDirection })` that queries the 'books' table in Supabase with pagination, text search on 'title', 'author', and 'category', and sorting. Include the `cover_image_url` field in the query. In `app/(admin)/books/page.tsx`, read the search parameters from the URL, call this new server action, and pass the fetched data and pagination details to the `data-table` client component. Wire up the Shadcn `Pagination` and `Input` components in the data table to update the URL search parameters. Implement comprehensive server-side sorting functionality with three-state sorting (ascending, descending, no sort) for all columns including title, author, ISBN, category, total copies, available copies, and status. Create a `useServerSort` hook to manage URL parameters and a `SortableTableHeader` component with visual indicators for active sort state and clear sort functionality.",
             "status": "done",
-            "testStrategy": "Verify the table on `/books` populates with data from the database. Test the pagination controls to navigate between pages. Use the search input to filter books by title or author and confirm the results are accurate."
+            "testStrategy": "Verify the table on `/books` populates with data from the database. Test the pagination controls to navigate between pages. Use the search input to filter books by title or author and confirm the results are accurate. Test sorting by clicking on each column header to verify ascending, descending, and no-sort states work correctly. Verify visual indicators show the current sort state and that the clear sort button resets all sorting."
           },
           {
             "id": 3,

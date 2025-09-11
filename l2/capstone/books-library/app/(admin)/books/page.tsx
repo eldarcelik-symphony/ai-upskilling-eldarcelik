@@ -8,6 +8,8 @@ interface AdminBooksPageProps {
     page?: string;
     query?: string;
     status?: string;
+    sortField?: string;
+    sortDirection?: string;
   }>;
 }
 
@@ -18,11 +20,20 @@ export default async function AdminBooksPage({
   const page = parseInt(params.page || '1');
   const query = params.query || '';
   const status = (params.status as 'all' | 'active' | 'inactive') || 'all';
+  const sortField = params.sortField as any;
+  const sortDirection = (params.sortDirection as 'asc' | 'desc') || 'asc';
   const limit = 10;
 
   let booksData;
   try {
-    booksData = await getBooks({ page, limit, query, status });
+    booksData = await getBooks({
+      page,
+      limit,
+      query,
+      status,
+      sortField,
+      sortDirection,
+    });
   } catch (error) {
     console.error('Error fetching books:', error);
     booksData = {

@@ -16,11 +16,16 @@ export interface Book {
   updated_at: string;
 }
 
+export type SortField = 'title' | 'author' | 'isbn' | 'category' | 'total_copies' | 'available_copies' | 'is_active' | 'created_at';
+export type SortDirection = 'asc' | 'desc';
+
 export interface GetBooksParams {
   page?: number;
   limit?: number;
   query?: string;
   status?: 'all' | 'active' | 'inactive';
+  sortField?: SortField;
+  sortDirection?: SortDirection;
 }
 
 export interface GetBooksResult {
@@ -36,6 +41,8 @@ export async function getBooks({
   limit = 10,
   query = '',
   status = 'all',
+  sortField,
+  sortDirection = 'asc',
 }: GetBooksParams = {}): Promise<GetBooksResult> {
   try {
     const supabase = await createClient();
@@ -63,10 +70,16 @@ export async function getBooks({
       );
     }
 
-    // Add pagination and ordering
-    supabaseQuery = supabaseQuery
-      .range(offset, offset + limit - 1)
-      .order('created_at', { ascending: false });
+    // Add sorting if specified
+    if (sortField) {
+      supabaseQuery = supabaseQuery.order(sortField, { ascending: sortDirection === 'asc' });
+    } else {
+      // Default ordering by created_at
+      supabaseQuery = supabaseQuery.order('created_at', { ascending: false });
+    }
+
+    // Add pagination
+    supabaseQuery = supabaseQuery.range(offset, offset + limit - 1);
 
     const { data: books, error, count } = await supabaseQuery;
 

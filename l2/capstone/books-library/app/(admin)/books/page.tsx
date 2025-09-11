@@ -1,12 +1,13 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { DataTable } from './components/data-table';
+import { DataTableWrapper } from './components/data-table-wrapper';
 import { getBooks } from '@/lib/actions/book.actions';
 import { BookSearchAndPagination } from '@/app/(admin)/books/components/book-search-pagination';
-
+import { BookFormWrapper } from './components/book-form-wrapper';
 interface AdminBooksPageProps {
   searchParams: Promise<{
     page?: string;
     query?: string;
+    status?: string;
   }>;
 }
 
@@ -16,11 +17,12 @@ export default async function AdminBooksPage({
   const params = await searchParams;
   const page = parseInt(params.page || '1');
   const query = params.query || '';
+  const status = (params.status as 'all' | 'active' | 'inactive') || 'all';
   const limit = 10;
 
   let booksData;
   try {
-    booksData = await getBooks({ page, limit, query });
+    booksData = await getBooks({ page, limit, query, status });
   } catch (error) {
     console.error('Error fetching books:', error);
     booksData = {
@@ -41,16 +43,15 @@ export default async function AdminBooksPage({
               currentPage={booksData.page}
               totalPages={booksData.totalPages}
               currentQuery={query}
+              currentStatus={status}
               showSearchOnly={true}
             />
-            <button className='bg-gray-100 text-gray-900 font-semibold px-4 py-2 rounded-md hover:bg-gray-200 transition-colors'>
-              Add New Book
-            </button>
+            <BookFormWrapper />
           </div>
         </CardHeader>
         <CardContent>
           <div className='mt-4'>
-            <DataTable data={booksData.books} />
+            <DataTableWrapper data={booksData.books} />
           </div>
           <div className='mt-4'>
             <BookSearchAndPagination

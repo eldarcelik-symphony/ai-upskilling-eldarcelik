@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -17,26 +18,115 @@ import {
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Edit, Trash2, Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
-import { Book } from '@/lib/actions/book.actions';
+import { Book, disableBook, deleteBook } from '@/lib/actions/book.actions';
+import { BookForm } from './book-form';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
 
 interface DataTableProps {
   data: Book[];
+  onBookUpdate?: () => void;
 }
 
-export function DataTable({ data }: DataTableProps) {
-  const handleEdit = (bookId: string) => {
-    console.log('Edit book:', bookId);
-    // TODO: Implement edit functionality
+export function DataTable({ data, onBookUpdate }: DataTableProps) {
+  const [editingBook, setEditingBook] = useState<Book | null>(null);
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
+  const [bookToDisable, setBookToDisable] = useState<Book | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDisabling, setIsDisabling] = useState(false);
+  const { toast } = useToast();
+  const handleEdit = (book: Book) => {
+    setEditingBook(book);
+    setIsEditFormOpen(true);
   };
 
-  const handleDelete = (bookId: string) => {
-    console.log('Delete book:', bookId);
-    // TODO: Implement delete functionality
+  const handleEditSuccess = () => {
+    setIsEditFormOpen(false);
+    setEditingBook(null);
+    onBookUpdate?.();
   };
 
-  const handleToggleStatus = (bookId: string) => {
-    console.log('Toggle status for book:', bookId);
-    // TODO: Implement toggle status functionality
+  const handleEditClose = () => {
+    setIsEditFormOpen(false);
+    setEditingBook(null);
+  };
+
+  const handleDeleteClick = (book: Book) => {
+    setBookToDelete(book);
+  };
+
+  const handleDisableClick = (book: Book) => {
+    setBookToDisable(book);
+  };
+
+  const confirmDelete = async () => {
+    if (!bookToDelete) return;
+
+    setIsDeleting(true);
+    try {
+      await deleteBook(bookToDelete.id);
+      onBookUpdate?.();
+    } catch (error) {
+      console.error('Error deleting book:', error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to delete book. Please try again.';
+      toast({
+        title: 'Error',
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsDeleting(false);
+      setBookToDelete(null);
+    }
+  };
+
+  const confirmDisable = async () => {
+    if (!bookToDisable) return;
+
+    setIsDisabling(true);
+    try {
+      await disableBook(bookToDisable.id);
+      toast({
+        title: 'Success',
+        description: 'Book disabled successfully!',
+      });
+      onBookUpdate?.();
+    } catch (error) {
+      console.error('Error disabling book:', error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to disable book. Please try again.';
+      toast({
+        title: 'Error',
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsDisabling(false);
+      setBookToDisable(null);
+    }
+  };
+
+  const cancelDelete = () => {
+    setBookToDelete(null);
+  };
+
+  const cancelDisable = () => {
+    setBookToDisable(null);
   };
 
   return (
@@ -57,7 +147,10 @@ export function DataTable({ data }: DataTableProps) {
         </TableHeader>
         <TableBody>
           {data.map((book) => (
-            <TableRow key={book.id}>
+            <TableRow
+              key={book.id}
+              className={!book.is_active ? 'opacity-60 bg-gray-50' : ''}
+            >
               <TableCell>
                 <div className='w-16 h-20 bg-gray-100 rounded-md flex items-center justify-center'>
                   {book.cover_image_url ? (
@@ -66,7 +159,9 @@ export function DataTable({ data }: DataTableProps) {
                       alt={book.title}
                       width={64}
                       height={80}
-                      className='object-cover rounded-md'
+                      className={`object-cover rounded-md ${
+                        !book.is_active ? 'grayscale' : ''
+                      }`}
                     />
                   ) : (
                     <div className='text-gray-400 text-xs text-center'>
@@ -117,28 +212,29 @@ export function DataTable({ data }: DataTableProps) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align='end'>
-                    <DropdownMenuItem onClick={() => handleEdit(book.id)}>
+                    <DropdownMenuItem onClick={() => handleEdit(book)}>
                       <Edit className='mr-2 h-4 w-4' />
                       Edit
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => handleToggleStatus(book.id)}
-                    >
-                      {book.is_active ? (
-                        <>
-                          <EyeOff className='mr-2 h-4 w-4' />
-                          Disable
-                        </>
-                      ) : (
-                        <>
-                          <Eye className='mr-2 h-4 w-4' />
-                          Enable
-                        </>
-                      )}
-                    </DropdownMenuItem>
+                    {book.is_active && (
+                      <DropdownMenuItem
+                        onClick={() => handleDisableClick(book)}
+                      >
+                        <EyeOff className='mr-2 h-4 w-4' />
+                        Disable
+                      </DropdownMenuItem>
+                    )}
+                    {!book.is_active && (
+                      <DropdownMenuItem
+                        onClick={() => handleDisableClick(book)}
+                      >
+                        <Eye className='mr-2 h-4 w-4' />
+                        Enable
+                      </DropdownMenuItem>
+                    )}
                     {book.available_copies === book.total_copies && (
                       <DropdownMenuItem
-                        onClick={() => handleDelete(book.id)}
+                        onClick={() => handleDeleteClick(book)}
                         className='text-red-600'
                       >
                         <Trash2 className='mr-2 h-4 w-4' />
@@ -152,6 +248,69 @@ export function DataTable({ data }: DataTableProps) {
           ))}
         </TableBody>
       </Table>
+
+      <BookForm
+        isOpen={isEditFormOpen}
+        onClose={handleEditClose}
+        onSuccess={handleEditSuccess}
+        book={editingBook}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!bookToDelete} onOpenChange={cancelDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Book</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{bookToDelete?.title}" by{' '}
+              {bookToDelete?.author}? This action cannot be undone and will
+              permanently remove the book and its cover image from the system.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={cancelDelete} disabled={isDeleting}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              disabled={isDeleting}
+              className='bg-red-600 hover:bg-red-700'
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Disable/Enable Confirmation Dialog */}
+      <AlertDialog open={!!bookToDisable} onOpenChange={cancelDisable}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {bookToDisable?.is_active ? 'Disable Book' : 'Enable Book'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {bookToDisable?.is_active
+                ? `Are you sure you want to disable "${bookToDisable?.title}"? This will hide it from the public catalog but preserve all data.`
+                : `Are you sure you want to enable "${bookToDisable?.title}"? This will make it visible in the public catalog again.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={cancelDisable} disabled={isDisabling}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDisable} disabled={isDisabling}>
+              {isDisabling
+                ? bookToDisable?.is_active
+                  ? 'Disabling...'
+                  : 'Enabling...'
+                : bookToDisable?.is_active
+                ? 'Disable'
+                : 'Enable'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -5,11 +5,19 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface BookSearchAndPaginationProps {
   currentPage: number;
   totalPages: number;
   currentQuery: string;
+  currentStatus?: string;
   showSearchOnly?: boolean;
   showPaginationOnly?: boolean;
   booksCount?: number;
@@ -20,6 +28,7 @@ export function BookSearchAndPagination({
   currentPage,
   totalPages,
   currentQuery,
+  currentStatus = 'all',
   showSearchOnly = false,
   showPaginationOnly = false,
   booksCount,
@@ -83,6 +92,19 @@ export function BookSearchAndPagination({
     });
   };
 
+  const handleStatusChange = (newStatus: string) => {
+    startTransition(() => {
+      const params = new URLSearchParams(searchParams);
+      if (newStatus === 'all') {
+        params.delete('status');
+      } else {
+        params.set('status', newStatus);
+      }
+      params.set('page', '1'); // Reset to first page when changing status
+      router.push(`?${params.toString()}`);
+    });
+  };
+
   const clearSearch = () => {
     setSearchQuery('');
   };
@@ -91,7 +113,32 @@ export function BookSearchAndPagination({
     <div className='space-y-4'>
       {/* Search Form */}
       {!showPaginationOnly && (
-        <div className='flex justify-end'>
+        <div className='flex justify-between items-center gap-4'>
+          {/* Status Filter */}
+          <div className='flex items-center gap-2'>
+            <label
+              htmlFor='status-filter'
+              className='text-sm font-medium text-gray-700'
+            >
+              Status:
+            </label>
+            <Select
+              value={currentStatus}
+              onValueChange={handleStatusChange}
+              disabled={isPending}
+            >
+              <SelectTrigger className='w-32' id='status-filter'>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>All Books</SelectItem>
+                <SelectItem value='active'>Active Only</SelectItem>
+                <SelectItem value='inactive'>Disabled Only</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Search Input */}
           <div className='relative w-80'>
             <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4' />
             <Input

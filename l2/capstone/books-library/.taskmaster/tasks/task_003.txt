@@ -1,6 +1,6 @@
 # Task ID: 3
 # Title: Build Admin Book Management (CRUD)
-# Status: To Do
+# Status: in progress
 # Dependencies: 2
 # Priority: high
 # Description: Develop the admin-only interface for creating, reading, updating, and deleting books in the library catalog.
@@ -11,33 +11,33 @@ Create an admin-protected page to display a list of all books with pagination an
 As an admin, create a new book and verify it appears in the list. Edit an existing book's details and confirm the changes are saved. Delete a book and ensure it is removed. Test form validation for required fields and data types.
 
 # Subtasks:
-## 1. Create Protected Admin Route and Book Data Table Component [pending]
+## 1. Create Protected Admin Route and Book Data Table Component [done]
 ### Dependencies: None
 ### Description: Set up the basic infrastructure for the admin book management page. This includes creating a new route group for admin pages, implementing role-based access control, and building a reusable data table component shell for displaying books.
 ### Details:
 Create a new route group `app/(admin)`. In `app/(admin)/layout.tsx`, fetch the user's profile and redirect non-admin users. Create the page file `app/(admin)/books/page.tsx`. In a new file, `app/(admin)/books/components/data-table.tsx`, build a client component that uses Shadcn's `Table` component to render columns and data. This initial version will use mock data and define the columns (Cover, Title, Author, Copies, Actions).
 
-## 2. Implement Server-Side Book Fetching with Search and Pagination [pending]
+## 2. Implement Server-Side Book Fetching with Search and Pagination [done]
 ### Dependencies: 3.1
 ### Description: Connect the data table to the Supabase backend to fetch and display a paginated list of all books. Implement server-side search functionality based on URL query parameters.
 ### Details:
 Create a new server action file `lib/actions/book.actions.ts`. Implement a function `getBooks({ page, limit, query })` that queries the 'books' table in Supabase with pagination and a text search on 'title' and 'author'. In `app/(admin)/books/page.tsx`, read the search parameters from the URL, call this new server action, and pass the fetched data and pagination details to the `data-table` client component. Wire up the Shadcn `Pagination` and `Input` components in the data table to update the URL search parameters.
 
-## 3. Develop 'Add Book' Form with Validation and Image Upload [pending]
+## 3. Develop 'Add Book' Form with Validation and Image Upload [done]
 ### Dependencies: 3.1
 ### Description: Create a modal form for adding new books, complete with client-side validation using Zod and React Hook Form, and server-side logic for inserting the data and uploading the cover image to Supabase Storage.
 ### Details:
 Create a new component `app/(admin)/books/components/book-form.tsx`. Use Shadcn's `Dialog` component to house a form built with `react-hook-form` and the `Form` component. Define a Zod schema for the book (title, author, category, copies, coverImage). Include a category field with predefined options (e.g., Fiction, Non-Fiction, Science, History, etc.). The form submission will trigger a new server action `createBook(formData)` in `lib/actions/book.actions.ts`. This action will upload the cover image to a 'book-covers' bucket in Supabase Storage and then insert the book record (with the image URL) into the 'books' table. Use `revalidatePath('/books')` upon success.
 
-## 4. Implement 'Edit Book' Functionality [pending]
+## 4. Implement 'Edit Book' Functionality [done]
 ### Dependencies: 3.2, 3.3
 ### Description: Enable admins to edit the details of an existing book using the same form component created for adding books, pre-filled with the book's current data.
 ### Details:
 Add an 'Edit' option to the `DropdownMenu` in the 'Actions' column of the data table. Clicking 'Edit' will open the `book-form` component in a dialog, populated with the selected book's data. Create a new server action `updateBook(bookId, formData)` in `book.actions.ts`. This action will handle updating the text fields and conditionally uploading a new cover image if one is provided, deleting the old one if it's replaced. The form submission should call this new action.
 
-## 5. Implement 'Delete Book' with Confirmation Dialog [pending]
+## 5. Implement 'Delete Book' with Confirmation Dialog [done]
 ### Dependencies: 3.2
 ### Description: Add the functionality to delete a book from the catalog. This includes a confirmation step to prevent accidental deletions and ensures the associated cover image is removed from storage.
 ### Details:
-Add 'Disable' and 'Delete' options to the 'Actions' column's `DropdownMenu`. For books with borrowed copies, only show 'Disable' option. For books with no borrowed copies, show both 'Disable' and 'Delete' options. On click, trigger a Shadcn `AlertDialog` to confirm the action. Upon confirmation, call server actions `disableBook(bookId)` or `deleteBook(bookId)` in `book.actions.ts`. The disable action sets `is_active` to false, while delete action removes the book record and cover image. Use `revalidatePath('/books')` to refresh the list.
+Add 'Disable' and 'Delete' options to the 'Actions' column's `DropdownMenu`. For books with borrowed copies, only show 'Disable' option. For books with no borrowed copies, show both 'Disable' and 'Delete' options. On click, trigger a Shadcn `AlertDialog` to confirm the action. Upon confirmation, call server actions `disableBook(bookId)` or `deleteBook(bookId)` in `book.actions.ts`. The disable action sets `is_active` to false, while delete action removes the book record and cover image. Use `revalidatePath('/books')` to refresh the list. Additionally, implement visual distinction for disabled books (reduced opacity, gray background, grayscale cover images, 'DISABLED' badge) and add a status filter dropdown ('All Books', 'Active Only', 'Disabled Only') to the admin interface for better book management.
 

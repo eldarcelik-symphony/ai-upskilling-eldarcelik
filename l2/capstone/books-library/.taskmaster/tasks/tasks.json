@@ -132,7 +132,7 @@
         "testStrategy": "As an admin, create a new book and verify it appears in the list. Edit an existing book's details and confirm the changes are saved. Delete a book and ensure it is removed. Test form validation for required fields and data types.",
         "priority": "high",
         "dependencies": [2],
-        "status": "pending",
+        "status": "in progress",
         "subtasks": [
           {
             "id": 1,
@@ -158,7 +158,7 @@
             "description": "Create a modal form for adding new books, complete with client-side validation using Zod and React Hook Form, and server-side logic for inserting the data and uploading the cover image to Supabase Storage.",
             "dependencies": ["3.1"],
             "details": "Create a new component `app/(admin)/books/components/book-form.tsx`. Use Shadcn's `Dialog` component to house a form built with `react-hook-form` and the `Form` component. Define a Zod schema for the book (title, author, category, copies, coverImage). Include a category field with predefined options (e.g., Fiction, Non-Fiction, Science, History, etc.). The form submission will trigger a new server action `createBook(formData)` in `lib/actions/book.actions.ts`. This action will upload the cover image to a 'book-covers' bucket in Supabase Storage and then insert the book record (with the image URL) into the 'books' table. Use `revalidatePath('/books')` upon success.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Open the 'Add Book' modal. Test validation by submitting an empty form and an invalid file type. Successfully submit the form with a valid cover image and book details. Verify the new book appears in the data table and the image is present in Supabase Storage."
           },
           {
@@ -167,7 +167,7 @@
             "description": "Enable admins to edit the details of an existing book using the same form component created for adding books, pre-filled with the book's current data.",
             "dependencies": ["3.2", "3.3"],
             "details": "Add an 'Edit' option to the `DropdownMenu` in the 'Actions' column of the data table. Clicking 'Edit' will open the `book-form` component in a dialog, populated with the selected book's data. Create a new server action `updateBook(bookId, formData)` in `book.actions.ts`. This action will handle updating the text fields and conditionally uploading a new cover image if one is provided, deleting the old one if it's replaced. The form submission should call this new action.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Click the 'Edit' button for a book. Verify the form appears with the correct data pre-filled. Change the title and number of copies, then save. Confirm the data table updates with the new information. Edit the book again, this time changing the cover image, and verify the old image is replaced in storage."
           },
           {
@@ -175,9 +175,9 @@
             "title": "Implement 'Delete Book' with Confirmation Dialog",
             "description": "Add the functionality to delete a book from the catalog. This includes a confirmation step to prevent accidental deletions and ensures the associated cover image is removed from storage.",
             "dependencies": ["3.2"],
-            "details": "Add 'Disable' and 'Delete' options to the 'Actions' column's `DropdownMenu`. For books with borrowed copies, only show 'Disable' option. For books with no borrowed copies, show both 'Disable' and 'Delete' options. On click, trigger a Shadcn `AlertDialog` to confirm the action. Upon confirmation, call server actions `disableBook(bookId)` or `deleteBook(bookId)` in `book.actions.ts`. The disable action sets `is_active` to false, while delete action removes the book record and cover image. Use `revalidatePath('/books')` to refresh the list.",
-            "status": "pending",
-            "testStrategy": "Click the 'Delete' button for a book. Cancel the action from the confirmation dialog and verify the book remains. Click 'Delete' again and confirm. Verify the book is removed from the UI and the database, and its cover image is deleted from Supabase Storage."
+            "details": "Add 'Disable' and 'Delete' options to the 'Actions' column's `DropdownMenu`. For books with borrowed copies, only show 'Disable' option. For books with no borrowed copies, show both 'Disable' and 'Delete' options. On click, trigger a Shadcn `AlertDialog` to confirm the action. Upon confirmation, call server actions `disableBook(bookId)` or `deleteBook(bookId)` in `book.actions.ts`. The disable action sets `is_active` to false, while delete action removes the book record and cover image. Use `revalidatePath('/books')` to refresh the list. Additionally, implement visual distinction for disabled books (reduced opacity, gray background, grayscale cover images, 'DISABLED' badge) and add a status filter dropdown ('All Books', 'Active Only', 'Disabled Only') to the admin interface for better book management.",
+            "status": "done",
+            "testStrategy": "Click the 'Delete' button for a book. Cancel the action from the confirmation dialog and verify the book remains. Click 'Delete' again and confirm. Verify the book is removed from the UI and the database, and its cover image is deleted from Supabase Storage. Test the 'Disable' functionality and verify disabled books appear with visual distinction (reduced opacity, gray background, grayscale images, 'DISABLED' badge). Test the status filter dropdown to ensure 'All Books', 'Active Only', and 'Disabled Only' filters work correctly. Verify that disabled books can be re-enabled and that the visual styling updates accordingly."
           }
         ]
       },

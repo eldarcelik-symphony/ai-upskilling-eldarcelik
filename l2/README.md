@@ -63,13 +63,12 @@ Start Date: 25. Aug 2025. | Target Completion: 20. Oct 2025.
 
 ### Productivity Metrics
 
-| Component/Feature | Traditional Estimate | AI-Assisted Actual | Gain % | Notes |
-| ----------------- | -------------------- | ------------------ | ------ | ----- |
-
-| Product Requirements Document and Tech Specs | 24h | 8h | 75% | Used Task Master AI to create tasks and subtasks. After that, the code is written using Cursor. |
-| Initial project setup (Next.js, React, Tailwind, Shadcn, Supabase) | 16h | 8h | 50% | Analyzed with AI to decide which technologies to use. |
-| Implement User Authentication and Role-Based Access | 20h | 10h | 50% | For Supabase integration is used Supabase Dashboard. Cursor can complicate the work and lead in another direction for integrations. Also, used React Hook Form and Zod forms and validations. |
-| Build Admin Book Management (CRUD) with server-side search, sort and pagination | 20h | 10h | 50% | A great example of how to get the best out of Cursor. |
+| Component/Feature                                                               | Traditional Estimate | AI-Assisted Actual | Gain % | Notes                                                                                                                                                                                         |
+| ------------------------------------------------------------------------------- | -------------------- | ------------------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Product Requirements Document and Tech Specs                                    | 24h                  | 8h                 | 75%    | Used Task Master AI to create tasks and subtasks. After that, the code is written using Cursor.                                                                                               |
+| Initial project setup (Next.js, React, Tailwind, Shadcn, Supabase)              | 16h                  | 8h                 | 50%    | Analyzed with AI to decide which technologies to use.                                                                                                                                         |
+| Implement User Authentication and Role-Based Access                             | 20h                  | 10h                | 50%    | For Supabase integration is used Supabase Dashboard. Cursor can complicate the work and lead in another direction for integrations. Also, used React Hook Form and Zod forms and validations. |
+| Build Admin Book Management (CRUD) with server-side search, sort and pagination | 20h                  | 10h                | 50%    | A great example of how to get the best out of Cursor.                                                                                                                                         |
 
 ### New Estimation Capability
 

@@ -194,56 +194,38 @@
           {
             "id": 1,
             "title": "Create Book Catalog Page with Initial Data Fetching",
-            "description": "Set up the main public-facing book catalog page at the `/books` route. This page will be a server component that fetches and displays a grid of all available books from the database.",
+            "description": "Set up the main public-facing book catalog page at the `/catalog` route. This page will be a server component that fetches and displays a grid of all available books from the database.",
             "dependencies": [],
-            "details": "Create a new route directory `app/books/`. Inside, create a `page.tsx` file. This file will be a server component that uses a server-side Supabase client to fetch all records from the `books` table where `is_active = true`. Use Shadcn UI components like `<Card>` and `<CardContent>` to create a responsive grid layout, displaying each book's cover image, title, author, and category.",
-            "status": "pending",
-            "testStrategy": "Navigate to `/books` and verify that a list of books fetched from the database is displayed correctly in a grid format."
+            "details": "Create a new route directory `app/catalog/`. Inside, create a `page.tsx` file. This file will be a server component that uses a server-side Supabase client to fetch all records from the `books` table. Use Shadcn UI components like `<Card>` and `<CardContent>` to create a responsive grid layout, displaying each book's cover image, title, author, and category.",
+            "status": "done",
+            "testStrategy": "Navigate to `/catalog` and verify that a list of books fetched from the database is displayed correctly in a grid format."
           },
           {
             "id": 2,
-            "title": "Implement Server-Side Search Functionality",
-            "description": "Add a search bar to the catalog page to allow users to filter books by title or author. The search logic will be executed on the server, and the search query will be stored in the URL search parameters.",
+            "title": "Implement Infinite Scroll with Search and Filtering",
+            "description": "Add infinite scroll functionality with search by title/author, category filtering, and availability filtering.",
             "dependencies": ["4.1"],
-            "details": "In `app/books/page.tsx`, add a search form with an `<Input>` component. The page component should read the search query from its `searchParams` prop. Create or update a data-fetching function (e.g., in `lib/data.ts`) to modify the Supabase query, using `.or('title.ilike.%query%,author.ilike.%query%,category.ilike.%query%')` to filter the results based on the provided query. Also add a category filter dropdown.",
-            "status": "pending",
-            "testStrategy": "On the `/books` page, enter a known book title or author into the search bar and submit. Verify that the list of books updates to show only the relevant results and that the URL contains the search query (e.g., `/books?query=...`)."
+            "details": "Create a client component `CatalogClient.tsx` with infinite scroll using Intersection Observer. Add search input for title/author filtering, category dropdown filter, and availability filter (all/available/unavailable). Update `getCatalogBooks()` function to support pagination, search, and filtering parameters. Create API route `/api/catalog` to handle client-side requests. Implement smooth loading states and end-of-catalog indicators.",
+            "status": "done",
+            "testStrategy": "Test infinite scroll by scrolling down to load more books. Test search functionality by typing book titles or authors. Test category and availability filters. Verify smooth loading states and proper end-of-catalog messaging."
           },
           {
             "id": 3,
-            "title": "Implement Server-Side Pagination",
-            "description": "Add pagination controls to the bottom of the catalog page to handle large numbers of books. The current page number will be managed via URL search parameters.",
-            "dependencies": ["4.1"],
-            "details": "Update the data-fetching function to accept `page` and `limit` arguments and use Supabase's `.range()` method for pagination. Perform a second query to get the total count of books for calculating the total number of pages. Use the Shadcn `<Pagination>` component in `app/books/page.tsx`, passing it the necessary props. The pagination links should update the `page` parameter in the URL.",
-            "status": "pending",
-            "testStrategy": "With more books in the database than the page limit, verify that the pagination controls appear. Click on a page number and confirm that the URL updates (e.g., `/books?page=2`) and a new set of books is displayed."
-          },
-          {
-            "id": 4,
-            "title": "Implement Server-Side Sorting",
-            "description": "Add sorting functionality to the catalog page allowing users to sort books by title, author, category, or publication date. The sorting will be handled server-side and reflected in URL parameters.",
-            "dependencies": ["4.1"],
-            "details": "Update the data-fetching function to accept `sortField` and `sortDirection` parameters. Use Supabase's `.order()` method to sort by the specified field and direction. Add a sorting dropdown or clickable column headers to the catalog page UI. Update URL search parameters when sorting options change. Support sorting by title, author, category, and available copies.",
-            "status": "pending",
-            "testStrategy": "Test sorting by each available field in both ascending and descending order. Verify that the URL parameters update correctly and that the book list is sorted as expected. Test that sorting works in combination with search and pagination."
-          },
-          {
-            "id": 5,
             "title": "Create Dynamic Route for Book Detail Page",
             "description": "Develop the individual book detail page using a dynamic route. This page will display comprehensive information about a single selected book.",
             "dependencies": [],
-            "details": "Create a new dynamic route `app/books/[id]/page.tsx`. This server component will receive the book `id` via its `params` prop. Create a new data-fetching function, `getBookById(id)`, to retrieve a single book's complete data from Supabase. Design a two-column layout to display the book's cover image on one side and its title, author, description, and other details on the other.",
+            "details": "Create a new dynamic route `app/catalog/[id]/page.tsx`. This server component will receive the book `id` via its `params` prop. Create a new data-fetching function, `getBookById(id)`, to retrieve a single book's complete data from Supabase. Design a two-column layout to display the book's cover image on one side and its title, author, description, and other details on the other.",
             "status": "pending",
-            "testStrategy": "Manually navigate to a URL like `/books/some-valid-id` and verify that all details for that specific book are displayed correctly."
+            "testStrategy": "Manually navigate to a URL like `/catalog/some-valid-id` and verify that all details for that specific book are displayed correctly."
           },
           {
-            "id": 6,
+            "id": 4,
             "title": "Link Catalog Items and Handle 'Not Found' State",
             "description": "Connect the catalog page to the detail page by making each book card a link. Also, implement a robust 'not found' state for the detail page if a book with the given ID does not exist.",
             "dependencies": ["4.1", "4.5"],
-            "details": "In `app/books/page.tsx`, wrap each book card component in a Next.js `<Link>` component that navigates to `/books/${book.id}`. In `app/books/[id]/page.tsx`, check if the data returned from `getBookById(id)` is null or empty. If so, call the `notFound()` function from `next/navigation` to render the standard 404 page.",
+            "details": "In `app/catalog/page.tsx`, wrap each book card component in a Next.js `<Link>` component that navigates to `/catalog/${book.id}`. In `app/catalog/[id]/page.tsx`, check if the data returned from `getBookById(id)` is null or empty. If so, call the `notFound()` function from `next/navigation` to render the standard 404 page.",
             "status": "pending",
-            "testStrategy": "Click on a book from the `/books` catalog page and verify it navigates to the correct detail page. Attempt to navigate to a non-existent book ID (e.g., `/books/invalid-id`) and confirm that a 404 'Not Found' page is displayed."
+            "testStrategy": "Click on a book from the `/catalog` catalog page and verify it navigates to the correct detail page. Attempt to navigate to a non-existent book ID (e.g., `/catalog/invalid-id`) and confirm that a 404 'Not Found' page is displayed."
           }
         ]
       },

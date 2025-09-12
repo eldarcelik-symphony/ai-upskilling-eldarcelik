@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { DataTableWrapper } from './components/data-table-wrapper';
-import { getBooks, SortField } from '@/lib/actions/book.actions';
+import { getAllBooks, SortField } from '@/lib/actions/book.actions';
 import { BookSearchAndPagination } from '@/app/(admin)/books/components/book-search-pagination';
 import { BookFormWrapper } from './components/book-form-wrapper';
 interface AdminBooksPageProps {
@@ -26,7 +26,7 @@ export default async function AdminBooksPage({
 
   let booksData;
   try {
-    booksData = await getBooks({
+    booksData = await getAllBooks({
       page,
       limit,
       query,

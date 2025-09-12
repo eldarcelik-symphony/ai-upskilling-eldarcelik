@@ -36,7 +36,7 @@ export interface GetBooksResult {
   totalPages: number;
 }
 
-export async function getBooks({
+export async function getAllBooks({
   page = 1,
   limit = 10,
   query = '',
@@ -85,7 +85,7 @@ export async function getBooks({
 
     if (error) {
       console.error('Error fetching books:', error);
-      throw new Error('Failed to fetch books');
+      throw new Error('Failed to fetch all books');
     }
 
     const totalCount = count || 0;
@@ -99,30 +99,86 @@ export async function getBooks({
       totalPages,
     };
   } catch (error) {
-    console.error('Error in getBooks action:', error);
-    throw new Error('Failed to fetch books');
+    console.error('Error in getAllBooks action:', error);
+    throw new Error('Failed to fetch all books');
   }
 }
 
-export async function getAllBooks(): Promise<Book[]> {
+export interface GetCatalogBooksParams {
+  page?: number;
+  limit?: number;
+  query?: string;
+  category?: string;
+  availability?: 'all' | 'available' | 'unavailable';
+}
+
+export interface GetCatalogBooksResult {
+  books: Book[];
+  hasMore: boolean;
+  totalCount: number;
+}
+
+export async function getCatalogBooks({
+  page = 1,
+  limit = 12,
+  query = '',
+  category = '',
+  availability = 'all'
+}: GetCatalogBooksParams = {}): Promise<GetCatalogBooksResult> {
   try {
     const supabase = await createClient();
 
-    const { data: books, error } = await supabase
-      .from('books')
-      .select('*')
-      .eq('is_active', true)
-      .order('created_at', { ascending: false });
+    // Calculate offset for pagination
+    const offset = (page - 1) * limit;
 
-    if (error) {
-      console.error('Error fetching all books:', error);
-      throw new Error('Failed to fetch books');
+    // Build the base query
+    let supabaseQuery = supabase
+      .from('books')
+      .select('*', { count: 'exact' })
+      .eq('is_active', true);
+
+    // Add search filter if query is provided
+    if (query.trim()) {
+      supabaseQuery = supabaseQuery.or(
+        `title.ilike.%${query}%,author.ilike.%${query}%`
+      );
     }
 
-    return books || [];
+    // Add category filter if provided
+    if (category.trim()) {
+      supabaseQuery = supabaseQuery.eq('category', category);
+    }
+
+    // Add availability filter
+    if (availability === 'available') {
+      supabaseQuery = supabaseQuery.gt('available_copies', 0);
+    } else if (availability === 'unavailable') {
+      supabaseQuery = supabaseQuery.eq('available_copies', 0);
+    }
+
+    // Add ordering and pagination
+    supabaseQuery = supabaseQuery
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1);
+
+    const { data: books, error, count } = await supabaseQuery;
+
+    if (error) {
+      console.error('Error fetching active books:', error);
+      throw new Error('Failed to fetch active books');
+    }
+
+    const totalCount = count || 0;
+    const hasMore = offset + limit < totalCount;
+
+    return {
+      books: books || [],
+      hasMore,
+      totalCount
+    };
   } catch (error) {
-    console.error('Error in getAllBooks action:', error);
-    throw new Error('Failed to fetch books');
+    console.error('Error in getActiveBooks action:', error);
+    throw new Error('Failed to fetch active books');
   }
 }
 

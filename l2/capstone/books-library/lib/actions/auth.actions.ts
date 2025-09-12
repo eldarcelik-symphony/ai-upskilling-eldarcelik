@@ -11,5 +11,5 @@ export async function logoutUser() {
   
   await supabase.auth.signOut();
   
-  redirect('/');
+  redirect('/login');
 }

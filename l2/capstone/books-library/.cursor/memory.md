@@ -66,8 +66,8 @@ Based on [PRD.txt](mdc:scripts/PRD.txt), the project implements a Book Rental Li
 
 - **auth.actions.ts**: `logoutUser()` - User logout with redirect
 - **book.actions.ts**: Complete book management operations
-  - `getBooks()` - Paginated book listing with search/sort/filter
-  - `getAllBooks()` - Get all active books
+  - `getAllBooks()` - Paginated book listing with search/sort/filter
+  - `getCatalogBooks()` - Get all books for catalog
   - `createBook()` - Create new book with cover image upload
   - `updateBook()` - Update book with smart availability calculation
   - `disableBook()` - Soft delete (set is_active = false)
@@ -118,7 +118,7 @@ books-library/
 │   │   │   │   └── *.tsx    # Table, forms, dialogs, search
 │   │   │   └── page.tsx     # Admin books dashboard
 │   │   └── layout.tsx  # Admin route protection
-│   ├── catalog/        # User-facing book catalog (empty - needs implementation)
+│   ├── catalog/        # User-facing book catalog (implemented - subtask 4.1)
 │   ├── login/          # User authentication
 │   ├── signup/         # User registration
 │   └── page.tsx        # Home page
@@ -159,7 +159,18 @@ books-library/
   - ISBN uniqueness validation
   - Available copies calculation based on borrowed books
   - Advanced error handling and validation
+- **Public Book Catalog**: Advanced catalog with infinite scroll and filtering
+  - Infinite scroll with Intersection Observer for smooth loading
+  - Debounced search by title and author (1-second delay)
+  - Category filtering dropdown using predefined categories from constants
+  - Availability filtering (all/available/unavailable)
+  - Responsive grid display with hover effects
+  - Book cover images with fallback placeholders
+  - Loading states and end-of-catalog indicators
+  - API endpoint for client-side data fetching
+  - Search input with clear button functionality
 - **Role-Based Access Control**: Complete middleware implementation protecting admin routes
+- **Role-Based Home Page**: Home page redirects users based on role (admins → /books, users → /catalog)
 - **Server Actions**: Comprehensive book management API with TypeScript interfaces
 - **File Upload System**: Supabase Storage integration for book covers
 - **Advanced UI Components**: Sortable tables, search controls, action dialogs, form validation

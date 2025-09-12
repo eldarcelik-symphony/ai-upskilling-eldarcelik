@@ -6,8 +6,11 @@ import { ROLES } from '@/lib/auth';
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
-  // Check if the request path starts with /admin
-  if (pathname.startsWith('/admin')) {
+  // Protected routes that require authentication
+  const protectedRoutes = ['/admin'];
+  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+  
+  if (isProtectedRoute) {
     try {
       // Create Supabase client
       const supabase = await createClient();
@@ -36,10 +39,13 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(loginUrl);
       }
       
-      // If user's role is not 'ADMIN', redirect to homepage
-      if (userData.role !== ROLES.ADMIN) {
+      // Role-based access control
+      if (pathname.startsWith('/admin') && userData.role !== ROLES.ADMIN) {
+        // Non-admin users trying to access admin routes get redirected to homepage
         return NextResponse.redirect(new URL('/', request.url));
       }
+      
+      // Catalog route is now publicly accessible (no authentication required)
       
     } catch (error) {
       // If any error occurs, redirect to login

@@ -60,8 +60,8 @@ export function BookActionDialogs({
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Book</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete "{bookToDelete?.title}" by{' '}
-              {bookToDelete?.author}? This action cannot be undone and will
+              Are you sure you want to delete &quot;{bookToDelete?.title}&quot;
+              by {bookToDelete?.author}? This action cannot be undone and will
               permanently remove the book and its cover image from the system.
             </AlertDialogDescription>
           </AlertDialogHeader>

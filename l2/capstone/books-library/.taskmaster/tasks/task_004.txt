@@ -29,14 +29,20 @@ In `app/books/page.tsx`, add a search form with an `<Input>` component. The page
 ### Details:
 Update the data-fetching function to accept `page` and `limit` arguments and use Supabase's `.range()` method for pagination. Perform a second query to get the total count of books for calculating the total number of pages. Use the Shadcn `<Pagination>` component in `app/books/page.tsx`, passing it the necessary props. The pagination links should update the `page` parameter in the URL.
 
-## 4. Create Dynamic Route for Book Detail Page [pending]
+## 4. Implement Server-Side Sorting [pending]
+### Dependencies: 4.1
+### Description: Add sorting functionality to the catalog page allowing users to sort books by title, author, category, or publication date. The sorting will be handled server-side and reflected in URL parameters.
+### Details:
+Update the data-fetching function to accept `sortField` and `sortDirection` parameters. Use Supabase's `.order()` method to sort by the specified field and direction. Add a sorting dropdown or clickable column headers to the catalog page UI. Update URL search parameters when sorting options change. Support sorting by title, author, category, and available copies.
+
+## 5. Create Dynamic Route for Book Detail Page [pending]
 ### Dependencies: None
 ### Description: Develop the individual book detail page using a dynamic route. This page will display comprehensive information about a single selected book.
 ### Details:
 Create a new dynamic route `app/books/[id]/page.tsx`. This server component will receive the book `id` via its `params` prop. Create a new data-fetching function, `getBookById(id)`, to retrieve a single book's complete data from Supabase. Design a two-column layout to display the book's cover image on one side and its title, author, description, and other details on the other.
 
-## 5. Link Catalog Items and Handle 'Not Found' State [pending]
-### Dependencies: 4.1, 4.4
+## 6. Link Catalog Items and Handle 'Not Found' State [pending]
+### Dependencies: 4.1, 4.5
 ### Description: Connect the catalog page to the detail page by making each book card a link. Also, implement a robust 'not found' state for the detail page if a book with the given ID does not exist.
 ### Details:
 In `app/books/page.tsx`, wrap each book card component in a Next.js `<Link>` component that navigates to `/books/${book.id}`. In `app/books/[id]/page.tsx`, check if the data returned from `getBookById(id)` is null or empty. If so, call the `notFound()` function from `next/navigation` to render the standard 404 page.

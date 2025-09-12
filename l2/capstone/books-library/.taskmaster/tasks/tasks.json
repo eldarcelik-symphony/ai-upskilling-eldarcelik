@@ -185,11 +185,11 @@
         "id": 4,
         "title": "Develop Public Book Catalog and Detail Pages",
         "description": "Create the public-facing pages for users to browse the book catalog and view individual book details.",
-        "details": "Build a main catalog page that lists all books, including their cover image, title, and author. Implement server-side search (by title/author) and pagination. Create a dynamic route `/[bookId]` to display a detailed page for each book.",
-        "testStrategy": "Verify the catalog page loads and displays books from the database. Test the search and pagination to ensure they function correctly. Navigate to a book detail page and confirm all information is displayed accurately.",
+        "details": "Build a main catalog page that lists all books, including their cover image, title, and author. Implement server-side search (by title/author), pagination and sorting. Create a dynamic route `/[bookId]` to display a detailed page for each book.",
+        "testStrategy": "Verify the catalog page loads and displays books from the database. Test the search, pagination and sorting to ensure they function correctly. Navigate to a book detail page and confirm all information is displayed accurately.",
         "priority": "medium",
         "dependencies": [3],
-        "status": "To Do",
+        "status": "in progress",
         "subtasks": [
           {
             "id": 1,
@@ -220,6 +220,15 @@
           },
           {
             "id": 4,
+            "title": "Implement Server-Side Sorting",
+            "description": "Add sorting functionality to the catalog page allowing users to sort books by title, author, category, or publication date. The sorting will be handled server-side and reflected in URL parameters.",
+            "dependencies": ["4.1"],
+            "details": "Update the data-fetching function to accept `sortField` and `sortDirection` parameters. Use Supabase's `.order()` method to sort by the specified field and direction. Add a sorting dropdown or clickable column headers to the catalog page UI. Update URL search parameters when sorting options change. Support sorting by title, author, category, and available copies.",
+            "status": "pending",
+            "testStrategy": "Test sorting by each available field in both ascending and descending order. Verify that the URL parameters update correctly and that the book list is sorted as expected. Test that sorting works in combination with search and pagination."
+          },
+          {
+            "id": 5,
             "title": "Create Dynamic Route for Book Detail Page",
             "description": "Develop the individual book detail page using a dynamic route. This page will display comprehensive information about a single selected book.",
             "dependencies": [],
@@ -228,10 +237,10 @@
             "testStrategy": "Manually navigate to a URL like `/books/some-valid-id` and verify that all details for that specific book are displayed correctly."
           },
           {
-            "id": 5,
+            "id": 6,
             "title": "Link Catalog Items and Handle 'Not Found' State",
             "description": "Connect the catalog page to the detail page by making each book card a link. Also, implement a robust 'not found' state for the detail page if a book with the given ID does not exist.",
-            "dependencies": ["4.1", "4.4"],
+            "dependencies": ["4.1", "4.5"],
             "details": "In `app/books/page.tsx`, wrap each book card component in a Next.js `<Link>` component that navigates to `/books/${book.id}`. In `app/books/[id]/page.tsx`, check if the data returned from `getBookById(id)` is null or empty. If so, call the `notFound()` function from `next/navigation` to render the standard 404 page.",
             "status": "pending",
             "testStrategy": "Click on a book from the `/books` catalog page and verify it navigates to the correct detail page. Attempt to navigate to a non-existent book ID (e.g., `/books/invalid-id`) and confirm that a 404 'Not Found' page is displayed."
@@ -526,7 +535,7 @@
     ],
     "metadata": {
       "created": "2025-09-03T15:24:06.858Z",
-      "updated": "2025-09-10T04:40:17.145Z",
+      "updated": "2025-09-12T05:05:47.995Z",
       "description": "Tasks for master context"
     }
   }

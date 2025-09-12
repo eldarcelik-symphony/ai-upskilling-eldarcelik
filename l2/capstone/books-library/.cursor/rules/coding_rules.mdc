@@ -46,6 +46,8 @@ alwaysApply: true
 - Leave no TODOs, placeholders, or missing pieces
 - Include all required imports
 - Write code and run it until it works well
+- **Build and run project after finishing each subtask to catch errors early**
+- **Fix any build or runtime errors immediately before proceeding**
 - Consider how new code fits into existing codebase
 - Consider error handling and edge cases
 - Consider security implications

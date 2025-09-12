@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { DataTableWrapper } from './components/data-table-wrapper';
-import { getBooks } from '@/lib/actions/book.actions';
+import { getBooks, SortField } from '@/lib/actions/book.actions';
 import { BookSearchAndPagination } from '@/app/(admin)/books/components/book-search-pagination';
 import { BookFormWrapper } from './components/book-form-wrapper';
 interface AdminBooksPageProps {
@@ -20,7 +20,7 @@ export default async function AdminBooksPage({
   const page = parseInt(params.page || '1');
   const query = params.query || '';
   const status = (params.status as 'all' | 'active' | 'inactive') || 'all';
-  const sortField = params.sortField as any;
+  const sortField = params.sortField as SortField | undefined;
   const sortDirection = (params.sortDirection as 'asc' | 'desc') || 'asc';
   const limit = 10;
 

@@ -29,7 +29,7 @@ Create a client component `CatalogClient.tsx` with infinite scroll using Interse
 ### Details:
 Create a new dynamic route `app/catalog/[id]/page.tsx`. This server component will receive the book `id` via its `params` prop. Create a new data-fetching function, `getBookById(id)`, to retrieve a single book's complete data from Supabase. Design a two-column layout to display the book's cover image on one side and its title, author, description, and other details on the other.
 
-## 4. Link Catalog Items and Handle 'Not Found' State [pending]
+## 4. Link Catalog Items and Handle 'Not Found' State [done]
 ### Dependencies: 4.1, 4.5
 ### Description: Connect the catalog page to the detail page by making each book card a link. Also, implement a robust 'not found' state for the detail page if a book with the given ID does not exist.
 ### Details:

@@ -224,7 +224,7 @@
             "description": "Connect the catalog page to the detail page by making each book card a link. Also, implement a robust 'not found' state for the detail page if a book with the given ID does not exist.",
             "dependencies": ["4.1", "4.5"],
             "details": "In `app/catalog/page.tsx`, wrap each book card component in a Next.js `<Link>` component that navigates to `/catalog/${book.id}`. In `app/catalog/[id]/page.tsx`, check if the data returned from `getBookById(id)` is null or empty. If so, call the `notFound()` function from `next/navigation` to render the standard 404 page.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Click on a book from the `/catalog` catalog page and verify it navigates to the correct detail page. Attempt to navigate to a non-existent book ID (e.g., `/catalog/invalid-id`) and confirm that a 404 'Not Found' page is displayed."
           }
         ]

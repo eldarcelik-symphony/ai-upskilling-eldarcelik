@@ -175,7 +175,7 @@ books-library/
   - Book details including ISBN, total copies, availability status, and date added
   - Category badges and availability indicators
   - Back to catalog navigation
-  - 404 handling for invalid or non-existent book IDs
+  - Custom 404 page (`app/catalog/not-found.tsx`) for invalid or non-existent book IDs
   - Placeholder for future borrowing functionality
 - **Role-Based Access Control**: Complete middleware implementation protecting admin routes
 - **Role-Based Home Page**: Home page redirects users based on role (admins → /books, users → /catalog)

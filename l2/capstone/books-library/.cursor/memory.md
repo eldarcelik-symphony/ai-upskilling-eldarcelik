@@ -169,6 +169,14 @@ books-library/
   - Loading states and end-of-catalog indicators
   - API endpoint for client-side data fetching
   - Search input with clear button functionality
+- **Book Detail Pages**: Dynamic route for individual book details
+  - Dynamic route `/catalog/[id]` with comprehensive book information
+  - Two-column layout with book cover and detailed information
+  - Book details including ISBN, total copies, availability status, and date added
+  - Category badges and availability indicators
+  - Back to catalog navigation
+  - 404 handling for invalid or non-existent book IDs
+  - Placeholder for future borrowing functionality
 - **Role-Based Access Control**: Complete middleware implementation protecting admin routes
 - **Role-Based Home Page**: Home page redirects users based on role (admins → /books, users → /catalog)
 - **Server Actions**: Comprehensive book management API with TypeScript interfaces

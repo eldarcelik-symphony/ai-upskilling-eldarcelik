@@ -23,7 +23,7 @@ Create a new route directory `app/catalog/`. Inside, create a `page.tsx` file. T
 ### Details:
 Create a client component `CatalogClient.tsx` with infinite scroll using Intersection Observer. Add search input for title/author filtering, category dropdown filter, and availability filter (all/available/unavailable). Update `getActiveBooks()` function to support pagination, search, and filtering parameters. Create API route `/api/catalog` to handle client-side requests. Implement smooth loading states and end-of-catalog indicators.
 
-## 3. Create Dynamic Route for Book Detail Page [pending]
+## 3. Create Dynamic Route for Book Detail Page [done]
 ### Dependencies: None
 ### Description: Develop the individual book detail page using a dynamic route. This page will display comprehensive information about a single selected book.
 ### Details:

@@ -215,7 +215,7 @@
             "description": "Develop the individual book detail page using a dynamic route. This page will display comprehensive information about a single selected book.",
             "dependencies": [],
             "details": "Create a new dynamic route `app/catalog/[id]/page.tsx`. This server component will receive the book `id` via its `params` prop. Create a new data-fetching function, `getBookById(id)`, to retrieve a single book's complete data from Supabase. Design a two-column layout to display the book's cover image on one side and its title, author, description, and other details on the other.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Manually navigate to a URL like `/catalog/some-valid-id` and verify that all details for that specific book are displayed correctly."
           },
           {

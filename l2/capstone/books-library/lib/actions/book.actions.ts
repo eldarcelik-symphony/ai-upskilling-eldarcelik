@@ -441,6 +441,35 @@ export async function disableBook(bookId: string) {
   }
 }
 
+export async function getBookById(bookId: string): Promise<Book | null> {
+  try {
+    const supabase = await createClient();
+
+    const { data: book, error } = await supabase
+      .from('books')
+      .select('*')
+      .eq('id', bookId)
+      .eq('is_active', true)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        // No rows returned
+        return null;
+      }
+      
+      // Handle invalid UUID or other database errors by returning null
+      console.error('Error fetching book by ID:', error);
+      return null;
+    }
+
+    return book;
+  } catch (error) {
+    console.error('Error in getBookById action:', error);
+    return null;
+  }
+}
+
 export async function deleteBook(bookId: string) {
   try {
     const supabase = await createClient();

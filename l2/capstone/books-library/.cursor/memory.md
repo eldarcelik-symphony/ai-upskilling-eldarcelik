@@ -41,11 +41,42 @@
 
 ## Requirements
 
-- [To be documented as requirements are gathered from PRD]
+Based on [PRD.txt](mdc:scripts/PRD.txt), the project implements a Book Rental Library with:
+
+### Core Features
+
+1. **User Authentication & Authorization**: Email/password signup with email verification, role-based access (USER/ADMIN)
+2. **User Management (Admin)**: Admin dashboard for user approval workflow (PENDING/APPROVED/REJECTED)
+3. **Book Management (Admin)**: Full CRUD operations with cover image upload, search, pagination
+4. **Book Catalog & Borrowing (User)**: Public catalog with search, book details, borrowing system
+5. **Dashboards & Profiles**: Admin dashboards, user profiles, book return functionality
+
+### Technical Requirements
+
+- Next.js App Router with TypeScript
+- Supabase for database, auth, and file storage
+- Tailwind CSS + shadcn/ui components
+- React Hook Form + Zod validation
+- Resend for email notifications
+- Role-based route protection
 
 ## API Endpoints
 
-- [To be documented as APIs are designed]
+### Server Actions (lib/actions/)
+
+- **auth.actions.ts**: `logoutUser()` - User logout with redirect
+- **book.actions.ts**: Complete book management operations
+  - `getBooks()` - Paginated book listing with search/sort/filter
+  - `getAllBooks()` - Get all active books
+  - `createBook()` - Create new book with cover image upload
+  - `updateBook()` - Update book with smart availability calculation
+  - `disableBook()` - Soft delete (set is_active = false)
+  - `deleteBook()` - Hard delete (only when no borrowed copies)
+
+### Authentication Endpoints
+
+- **app/login/actions.ts**: `signInAction()` - User login with validation
+- **app/signup/actions.ts**: `signUpAction()` - User registration with email verification
 
 ## Database Schema
 
@@ -80,15 +111,32 @@
 ```
 books-library/
 ├── app/                 # Next.js App Router
-│   ├── signup/         # User registration
+│   ├── (admin)/        # Admin-only routes (protected by middleware)
+│   │   ├── books/      # Complete book management system
+│   │   │   ├── components/  # Book management UI components
+│   │   │   │   ├── hooks/   # Custom hooks for book actions
+│   │   │   │   └── *.tsx    # Table, forms, dialogs, search
+│   │   │   └── page.tsx     # Admin books dashboard
+│   │   └── layout.tsx  # Admin route protection
+│   ├── catalog/        # User-facing book catalog (empty - needs implementation)
 │   ├── login/          # User authentication
-│   └── test-supabase/  # Database testing
+│   ├── signup/         # User registration
+│   └── page.tsx        # Home page
 ├── components/          # Reusable UI components
-│   └── ui/             # shadcn/ui components
+│   ├── ui/             # shadcn/ui components
+│   └── navigation*.tsx # Navigation components
 ├── lib/                # Utility functions
-│   └── supabase/       # Database client & types
+│   ├── actions/        # Server actions
+│   │   ├── auth.actions.ts
+│   │   └── book.actions.ts
+│   ├── supabase/       # Database client & types
+│   ├── auth.ts         # User role management utilities
+│   └── constants.ts    # App constants (ROLES, CATEGORIES)
+├── hooks/              # Custom React hooks
 ├── supabase/           # Database schema & migrations
 │   └── schema.sql      # Complete database setup
+├── scripts/            # Project scripts
+│   └── PRD.txt         # Product Requirements Document
 ├── public/             # Static assets
 └── .cursor/            # Cursor configuration
     ├── memory.md       # Project memory
@@ -97,23 +145,58 @@ books-library/
 
 ## Implementation Status
 
-### ✅ Completed
+### ✅ Completed Features
 
-- **User Authentication System**: Signup/login with form validation
+- **User Authentication System**: Complete signup/login with form validation and error handling
 - **Database Schema**: Complete setup with triggers, RLS policies, and comprehensive documentation
 - **User Management**: Automatic profile creation with roles and approval status
 - **UI Components**: shadcn/ui integration with toast notifications
 - **Database Documentation**: Comprehensive README with schema features, performance optimizations, and security policies
+- **Admin Book Management System**: Complete CRUD operations with advanced features
+  - Server-side search, pagination, and sorting
+  - Book cover image upload to Supabase Storage
+  - Smart book operations (enable/disable, conditional delete)
+  - ISBN uniqueness validation
+  - Available copies calculation based on borrowed books
+  - Advanced error handling and validation
+- **Role-Based Access Control**: Complete middleware implementation protecting admin routes
+- **Server Actions**: Comprehensive book management API with TypeScript interfaces
+- **File Upload System**: Supabase Storage integration for book covers
+- **Advanced UI Components**: Sortable tables, search controls, action dialogs, form validation
 
-### 🚧 In Progress
+### 📋 Task Tracking
 
-- **Task 2**: User Authentication and Role-Based Access (2/5 subtasks completed)
+For current task status and progress, see [tasks.json](mdc:.taskmaster/tasks/tasks.json)
 
-### 📋 Next Steps
+## Key Implementation Details
 
-- Integrate Resend for custom email verification
-- Implement role-based access control middleware
-- Create server-side utility for user role fetching
+### Admin Book Management Features
+
+- **Advanced Search**: Search by title, author, or category with server-side filtering
+- **Smart Pagination**: Server-side pagination with configurable page sizes
+- **Sortable Columns**: Server-side sorting on all book fields
+- **File Upload**: Cover image upload to Supabase Storage with unique naming
+- **Smart Operations**:
+  - Books can only be deleted when no copies are borrowed
+  - Disable/enable books instead of hard delete
+  - Available copies automatically calculated based on current borrowings
+- **Form Validation**: Comprehensive Zod schemas with real-time validation
+- **Error Handling**: Detailed error messages and user feedback
+
+### Architecture Patterns
+
+- **Server Actions**: All data operations use Next.js server actions
+- **Type Safety**: Complete TypeScript interfaces for all data structures
+- **Component Composition**: Reusable UI components with proper separation of concerns
+- **Custom Hooks**: Business logic separated into custom hooks (useBookActions, useServerSort)
+- **Middleware Protection**: Route-level protection for admin functionality
+
+### Database Integration
+
+- **Supabase Storage**: `book-covers` bucket for image storage
+- **RLS Policies**: Row-level security for data protection
+- **Triggers**: Automatic timestamp management and availability tracking
+- **Performance**: Indexed queries for search and pagination
 
 ## Notes
 
@@ -122,3 +205,4 @@ books-library/
 - Integrated with Taskmaster for project management
 - Database schema is production-ready with proper error handling
 - All authentication flows tested and working
+- **Memory Update Rule**: Always update memory after completing tasks/subtasks

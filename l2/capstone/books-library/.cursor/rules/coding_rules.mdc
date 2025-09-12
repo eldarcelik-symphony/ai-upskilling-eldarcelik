@@ -80,7 +80,17 @@ alwaysApply: true
 
 - Update [memory.md](mdc:.cursor/memory.md) with project specifications and requirements
 - Store patterns, decisions, and learnings for future reference
+- **MANDATORY: After completing ANY task or subtask, immediately update memory with:**
+  - New features implemented
+  - Architecture decisions made
+  - Code patterns established
+  - Dependencies added/removed
+  - Database schema changes
+  - API endpoints created
+  - UI components built
+  - Configuration changes
 - When tasks are completed: create/update entities, define relationships, store observations
+- **Never leave memory outdated** - it's critical for project continuity
 
 # DEBUGGING & MAINTENANCE
 
